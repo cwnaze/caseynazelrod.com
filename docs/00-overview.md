@@ -39,9 +39,8 @@ Define the goals, audience, tech stack, and high-level architecture for caseynaz
 
 ## Deploy Target
 - Build output: fully static via `adapter-static` (`fallback` disabled — this is a single prerendered page, not an SPA needing a 404 fallback).
-- Primary target: GitHub Pages (project site under a custom domain) with a GitHub Actions workflow running `npm run build` and publishing `build/`.
-- Secondary/alternate target: Netlify, using the same static `build/` output — no Netlify-specific server functions are used, so the same build artifact serves both targets.
-- **DNS:** owner will configure `caseynazelrod.com` DNS themselves once the project is complete — the build plan and CI setup should not block on this; deploy to the platform's default subdomain (e.g. `*.github.io` / `*.netlify.app`) first, custom domain wiring happens after.
+- **Resolved (superseding the earlier GitHub Pages plan):** owner is hosting on **Vercel** directly (via Vercel's own dashboard/Git integration), not GitHub Pages. No repo-side deploy workflow or `BASE_PATH`/subpath handling is needed — Vercel serves the project from the domain root (both its default `*.vercel.app` preview/production URL and the eventual custom domain), so none of the GitHub Pages project-subpath complications apply. `.github/workflows/ci.yml` (typecheck/lint/build gate on every PR) still applies regardless of hosting provider; there is no `.github/workflows/deploy.yml` — deployment is owned entirely by Vercel's own build pipeline, outside this repo's CI.
+- **DNS:** owner will configure `caseynazelrod.com` DNS themselves once the project is complete — the build plan and CI setup should not block on this; deploy to Vercel's default subdomain first, custom domain wiring happens after.
 
 ## Contact / Form
 - Contact is handled via a form (not `mailto:` only). For v1, the form submits to a placeholder backend (a stub API endpoint that logs/no-ops, or a static-friendly placeholder service) — the owner will wire it to Resend later. The form component and its submit handler should be built so swapping the backend endpoint/service is a config change, not a component rewrite.
