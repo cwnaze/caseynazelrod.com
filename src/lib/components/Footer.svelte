@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { hero } from '$lib/data/hero';
 	import ContactForm from '$lib/components/ContactForm.svelte';
+	import GrowthAccent from '$lib/components/GrowthAccent.svelte';
+	import { reveal } from '$lib/actions/reveal';
 </script>
 
+<GrowthAccent />
+
 <footer class="border-t border-green p-8 py-16">
-	<h2 class="glitch-hover font-mono text-sm text-green-bright">$ contact --send</h2>
+	<h2 use:reveal class="glitch-hover font-mono text-sm text-green-bright">$ contact --send</h2>
 
 	<div class="mt-8">
 		<ContactForm />

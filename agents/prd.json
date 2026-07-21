@@ -262,8 +262,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: reveal elements start with class='reveal' (opacity:0) before scrolling into view, gain 'is-visible' (opacity:1) once ~20% intersecting, and stay revealed after scrolling away (one-shot, confirmed via className check). Staggered grid items (ProjectCard/CertCard wrapped in use:reveal={{delayMs: i*60}} divs) both eventually reveal correctly. GrowthAccent (4 instances, one per section transition) confirmed present, undrawn (stroke-dashoffset:60px) before reveal and drawn (0px) after, no filter/blur. Both reduced-motion overrides (.reveal, .growth-accent path) confirmed in compiled build CSS. Deliberately did NOT apply the generic reveal action to Hero's heading, since it already has its own dedicated boot-sequence-driven opacity transition — layering the generic scroll-reveal on top would create two competing opacity systems on the same element."
     },
     {
       "id": "US-017",
