@@ -186,12 +186,11 @@ section[id] {
 }
 
 /* Hover reactions on the Hero bloom — rustling, not a rigid scale/spin of the whole shape.
-   Each petal/leaf rotates from its own --base-angle (set inline per element in
-   HeroBloom.svelte), pivoting around the point where it actually meets the stem
-   (transform-origin, also set inline), so the rustle reads as that specific piece shaking in
-   place rather than the whole flower/leaf swinging around an unrelated center. */
-.hero-petal,
-.hero-leaf ellipse {
+   Each petal rotates from its own --base-angle (set inline per element in HeroBloom.svelte),
+   pivoting around the point where it actually meets the blossom's center (transform-origin,
+   also set inline), so the rustle reads as that specific petal shaking in place rather than
+   the whole blossom swinging around an unrelated center. */
+.hero-petal {
 	transform-box: view-box;
 }
 
@@ -234,29 +233,36 @@ section[id] {
 	animation-delay: 300ms;
 }
 
-@keyframes hero-leaf-rustle {
+/* A plain rotation wouldn't read visually on a circle, so the foliage bulbs "rustle" via a
+   squash-and-stretch wobble instead. */
+.hero-bulb {
+	transform-box: fill-box;
+	transform-origin: center;
+}
+
+@keyframes hero-bulb-rustle {
 	0%,
 	100% {
-		transform: rotate(var(--base-angle));
+		transform: scale(1, 1);
 	}
 	25% {
-		transform: rotate(calc(var(--base-angle) - 10deg));
+		transform: scale(1.1, 0.9);
 	}
 	50% {
-		transform: rotate(calc(var(--base-angle) + 8deg));
+		transform: scale(0.92, 1.08);
 	}
 	75% {
-		transform: rotate(calc(var(--base-angle) - 6deg));
+		transform: scale(1.06, 0.94);
 	}
 }
 
-.hero-leaf:hover ellipse {
-	animation: hero-leaf-rustle 450ms ease-in-out infinite;
+.hero-bulb:hover {
+	animation: hero-bulb-rustle 450ms ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.hero-flower:hover .hero-petal,
-	.hero-leaf:hover ellipse {
+	.hero-bulb:hover {
 		animation: none;
 	}
 }

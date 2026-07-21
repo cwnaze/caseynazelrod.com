@@ -83,6 +83,7 @@
 					{hero.name}
 				</h1>
 				<p class="mt-2 font-mono text-lg text-green-bright">{hero.title}</p>
+				<hr class="mt-4 w-32 border-t border-text-muted" />
 
 				<div class="mt-8 flex flex-wrap items-center gap-4 font-mono text-sm">
 					<button
