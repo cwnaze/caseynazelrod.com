@@ -76,6 +76,7 @@ Give a fuller narrative: background, what drives the dual dev/security focus, an
   export const about: AboutContent = { /* ... */ };
   ```
 - Structure: section heading (`$ whoami`-style terminal label), narrative block, "currently building" line, `Experience` sub-list (renders `about.experience`).
+- **Ordering (found during US-008 self-review):** `about.experience` is not required to be pre-sorted in the data file — `ExperienceList.svelte` sorts a copy most-recent-first at render time (ongoing/no-`endDate` entries always rank above any entry with an `endDate`, then by `endDate` descending, then `startDate` descending), matching standard resume convention. Don't rely on array order when adding a new entry to `about.ts`.
 
 ### Acceptance Criteria
 - [ ] Narrative text meets body-copy contrast requirements from `01-design-system.md`.

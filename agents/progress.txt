@@ -117,3 +117,14 @@
 - **Learnings for future iterations:**
   - Constructing dates from `YYYY-MM`-style strings: always use `Date.UTC(year, month - 1)` + a `timeZone: 'UTC'` option on `toLocaleDateString`, never bare `new Date(isoDateString)`, to avoid off-by-one-month timezone bugs. This will matter again for any other date-formatted content (cert issue/expiry dates in US-012).
 ---
+
+## 2026-07-21 - US-008 (self-review fix)
+- Self-review (no Copilot pass involved this time) caught two real issues before opening the PR:
+  1. `about.experience`'s array order is Finback 670 (past, `endDate` set) then InvitaHealth (current, no `endDate`) — rendering in raw array order put the *current* role second, backwards from standard resume convention (most-recent-first). Fixed by having `ExperienceList.svelte` sort a derived copy: entries with no `endDate` (ongoing) always rank first, then by `endDate` descending, then `startDate` descending — so correctness doesn't depend on `about.ts` happening to be authored in the right order.
+  2. `{#each items as entry (entry.org)}` keyed only by `org` would collide if someone ever has two separate stints at the same employer (e.g. a return internship). Changed the key to `entry.org + entry.startDate`.
+- Documented the sort behavior in `docs/03-hero-about.md` so future data-file edits don't need to worry about array order.
+- Verified with rodney: InvitaHealth (current) now renders first, Finback 670 second.
+- **Learnings for future iterations:**
+  - When a data file lists real-world chronological entries (experience, certs, accomplishments), don't assume the array is (or will stay) sorted correctly — sort at render time in the component instead, and treat "ongoing" (no end date) as always outranking any entry with an end date, not just latest-start-date-wins.
+  - `{#each}` keys built from a single field (e.g. `entry.org`) are a smell whenever that field isn't guaranteed unique across the whole array — prefer a composite key (or an explicit `id` field on the data type) when uniqueness isn't structurally guaranteed.
+---
