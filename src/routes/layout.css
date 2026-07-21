@@ -163,51 +163,13 @@ section[id] {
    at all — only individual leaves move, so .hero-bloom itself is just a static positioning
    wrapper (see .hero-leaf below for the actual motion). */
 
-/* Every leaf sways continuously and gently, as if in a light breeze — each with its own
-   animation-delay (set inline per element in HeroBloom.svelte) so they don't all move in
-   lockstep. Rotation pivots around the leaf's own centroid (transform-origin, also set inline).
-   .is-near swaps in a faster, larger-amplitude version — HeroBloom.svelte tracks pointer
-   position and toggles .is-near on whichever leaves fall within RUSTLE_RADIUS of it (not
-   :hover, so several leaves react together and it follows the cursor continuously instead of
-   needing to land exactly on one small shape). */
+/* Every leaf's rotation is driven directly by a requestAnimationFrame loop in HeroBloom.svelte
+   (gusty idle sway, boosted continuously by pointer proximity — see the $effect there), not a
+   CSS animation — so there's no discrete hover-triggered animation to start/restart, and the
+   response to pointer movement is exactly one frame behind, not "waiting" on anything. Rotation
+   pivots around the leaf's own centroid (transform-origin, set inline per element). Under
+   prefers-reduced-motion the loop never starts, so leaves stay at their untransformed rest
+   position. */
 .hero-leaf {
 	transform-box: view-box;
-	animation: hero-leaf-wind 2200ms ease-in-out infinite;
-}
-
-@keyframes hero-leaf-wind {
-	0%,
-	100% {
-		transform: rotate(-13deg);
-	}
-	50% {
-		transform: rotate(13deg);
-	}
-}
-
-@keyframes hero-leaf-rustle {
-	0%,
-	100% {
-		transform: rotate(0deg);
-	}
-	25% {
-		transform: rotate(-26deg);
-	}
-	50% {
-		transform: rotate(20deg);
-	}
-	75% {
-		transform: rotate(-16deg);
-	}
-}
-
-.hero-leaf.is-near {
-	animation: hero-leaf-rustle 300ms ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.hero-leaf,
-	.hero-leaf.is-near {
-		animation: none;
-	}
 }

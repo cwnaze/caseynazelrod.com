@@ -1251,9 +1251,32 @@
 	];
 
 	let svgEl: SVGSVGElement | undefined = $state();
-	let mouseX = $state(-9999);
-	let mouseY = $state(-9999);
-	let rafPending = false;
+	// Plain (non-reactive) — updated every frame from a rAF loop, not Svelte state, so 174
+	// leaves' worth of continuous motion never goes through Svelte's reactivity/diffing.
+	let mouseX = -9999;
+	let mouseY = -9999;
+
+	type LeafHandle = { node: SVGPathElement; cx: number; cy: number; phase: number };
+	let leafHandles: LeafHandle[] = [];
+
+	// Svelte action: registers each leaf's DOM node (plus a phase offset derived from its
+	// existing deterministic `delay`) so the rAF loop below can drive its transform directly,
+	// instead of going through a CSS animation that would have to restart/reset whenever the
+	// pointer-proximity state changes.
+	function registerLeaf(node: SVGPathElement, leaf: { cx: number; cy: number; delay: number }) {
+		const handle: LeafHandle = {
+			node,
+			cx: leaf.cx,
+			cy: leaf.cy,
+			phase: (leaf.delay / 3000) * Math.PI * 2
+		};
+		leafHandles.push(handle);
+		return {
+			destroy() {
+				leafHandles = leafHandles.filter((h) => h !== handle);
+			}
+		};
+	}
 
 	// $derived (not $effect) so this is also safely computed during SSR — the typeof guard
 	// keeps it false on the server, where window doesn't exist.
@@ -1261,21 +1284,26 @@
 		typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 	);
 
-	function updateMouse(clientX: number, clientY: number) {
-		if (!svgEl) return;
-		const rect = svgEl.getBoundingClientRect();
-		mouseX = ((clientX - rect.left) / rect.width) * VIEW_SIZE;
-		mouseY = ((clientY - rect.top) / rect.height) * VIEW_SIZE;
-	}
+	// The tree is hidden below the lg breakpoint (see the wrapping div's class), but unlike a
+	// CSS animation — which browsers automatically pause on a display:none element — a rAF loop
+	// keeps ticking regardless of visibility. Track the breakpoint ourselves so the loop doesn't
+	// run (and drain battery) on mobile, where it's never actually seen.
+	let isDesktop = $state(typeof window !== 'undefined' && window.innerWidth >= 1024);
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		function onResize() {
+			isDesktop = window.innerWidth >= 1024;
+		}
+		window.addEventListener('resize', onResize, { passive: true });
+		return () => window.removeEventListener('resize', onResize);
+	});
 
 	function handlePointerMove(e: PointerEvent) {
-		if (rafPending) return;
-		rafPending = true;
-		const { clientX, clientY } = e;
-		requestAnimationFrame(() => {
-			rafPending = false;
-			updateMouse(clientX, clientY);
-		});
+		if (!svgEl) return;
+		const rect = svgEl.getBoundingClientRect();
+		mouseX = ((e.clientX - rect.left) / rect.width) * VIEW_SIZE;
+		mouseY = ((e.clientY - rect.top) / rect.height) * VIEW_SIZE;
 	}
 
 	function handlePointerLeave() {
@@ -1283,20 +1311,48 @@
 		mouseY = -9999;
 	}
 
-	function isNear(x: number, y: number) {
-		const dx = x - mouseX;
-		const dy = y - mouseY;
-		return dx * dx + dy * dy < RUSTLE_RADIUS * RUSTLE_RADIUS;
-	}
+	// Every leaf's rotation is recomputed from scratch each frame — base sway (its own phase,
+	// so leaves aren't in lockstep) times a shared "gust" envelope (two slow, unrelated-period
+	// sine waves summed, so the wind ebbs and flows rather than looping identically), plus a
+	// continuous 0-1 proximity boost. Nothing here is a discrete animation that starts/stops —
+	// the boost is just a bigger multiplier applied on the very next frame after the pointer
+	// moves, so there's no "waiting" for a rustle animation to kick in.
+	$effect(() => {
+		if (reduced || !isDesktop) return;
+
+		let rafId: number;
+		function frame(t: number) {
+			const gust = Math.max(
+				0.3,
+				1 +
+					0.5 * Math.sin((t / 5300) * Math.PI * 2) +
+					0.25 * Math.sin((t / 2100) * Math.PI * 2 + 2.1)
+			);
+			for (const leaf of leafHandles) {
+				const dx = leaf.cx - mouseX;
+				const dy = leaf.cy - mouseY;
+				const dist = Math.sqrt(dx * dx + dy * dy);
+				const boost = Math.max(0, 1 - dist / RUSTLE_RADIUS);
+				const amplitude = 13 * gust * (1 + boost * 1.1);
+				const freqScale = 1 + boost * 1.8;
+				const angle = amplitude * Math.sin((t / 2200) * freqScale * Math.PI * 2 + leaf.phase);
+				leaf.node.style.transform = `rotate(${angle.toFixed(2)}deg)`;
+			}
+			rafId = requestAnimationFrame(frame);
+		}
+		rafId = requestAnimationFrame(frame);
+
+		return () => cancelAnimationFrame(rafId);
+	});
 </script>
 
 <!-- Purely decorative tree to the right of Hero's text, traced from a flat-design tree-silhouette
 	 reference (see STRUCTURE_PATHS/FOLIAGE above for provenance) and recolored to the site's
-	 green. The trunk/branch structure never animates — only individual leaves move: each sways
-	 continuously (a per-leaf staggered idle "wind", see --wind-delay/.hero-leaf in layout.css)
-	 and rustles harder whenever it's within RUSTLE_RADIUS of the pointer (.is-near), which
-	 follows the cursor continuously rather than requiring a precise hover on one small shape.
-	 Disabled entirely under prefers-reduced-motion. -->
+	 green. The trunk/branch structure never animates — only individual leaves move, driven by a
+	 requestAnimationFrame loop (see the $effect above) rather than CSS keyframes: each leaf
+	 sways continuously in a gusty, variable-speed wind, and rustles instantly harder/faster the
+	 closer the pointer gets (no discrete hover animation to wait for). Disabled entirely under
+	 prefers-reduced-motion. -->
 <div aria-hidden="true" class="hero-bloom hidden lg:block">
 	<svg
 		bind:this={svgEl}
@@ -1314,11 +1370,12 @@
 
 		{#each FOLIAGE as leaf (leaf.id)}
 			<path
-				class="hero-leaf {isNear(leaf.cx, leaf.cy) ? 'is-near' : ''}"
+				use:registerLeaf={leaf}
+				class="hero-leaf"
 				d={leaf.d}
 				fill="var(--color-green)"
 				fill-rule="nonzero"
-				style="transform-origin: {leaf.cx}px {leaf.cy}px; animation-delay: {leaf.delay}ms;"
+				style="transform-origin: {leaf.cx}px {leaf.cy}px;"
 			/>
 		{/each}
 	</svg>
