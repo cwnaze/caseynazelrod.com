@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { hero } from '$lib/data/hero';
 	import ScrollCue from '$lib/components/ScrollCue.svelte';
-	import HeroGrowth from '$lib/components/HeroGrowth.svelte';
 
 	const CHAR_DELAY_MS = 10;
 	const LINE_PAUSE_MS = 100;
@@ -120,6 +119,5 @@
 		</div>
 	</div>
 
-	<HeroGrowth />
 	<ScrollCue />
 </section>
