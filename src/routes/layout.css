@@ -172,16 +172,16 @@ section[id] {
    needing to land exactly on one small shape). */
 .hero-leaf {
 	transform-box: view-box;
-	animation: hero-leaf-wind 2600ms ease-in-out infinite;
+	animation: hero-leaf-wind 2200ms ease-in-out infinite;
 }
 
 @keyframes hero-leaf-wind {
 	0%,
 	100% {
-		transform: rotate(-6deg);
+		transform: rotate(-13deg);
 	}
 	50% {
-		transform: rotate(6deg);
+		transform: rotate(13deg);
 	}
 }
 
@@ -191,18 +191,18 @@ section[id] {
 		transform: rotate(0deg);
 	}
 	25% {
-		transform: rotate(-14deg);
+		transform: rotate(-26deg);
 	}
 	50% {
-		transform: rotate(11deg);
+		transform: rotate(20deg);
 	}
 	75% {
-		transform: rotate(-8deg);
+		transform: rotate(-16deg);
 	}
 }
 
 .hero-leaf.is-near {
-	animation: hero-leaf-rustle 350ms ease-in-out infinite;
+	animation: hero-leaf-rustle 300ms ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
