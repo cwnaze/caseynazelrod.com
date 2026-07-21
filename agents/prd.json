@@ -76,8 +76,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney (Chrome CLI automation): all four sections exist/visible, getBoundingClientRect() confirms they stack at 0/800/1600/2400/3200px with zero overlap or gap, screenshots confirm correct rendering at desktop and mobile. First verification pass incorrectly assumed no browser tool was available and used curl-only structural checks instead; corrected in a follow-up commit on this branch and in the PR comments. Full detail in agents/progress.txt's US-005 entry."
     },
     {
       "id": "US-006",

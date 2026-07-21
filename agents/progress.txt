@@ -52,3 +52,14 @@
   - `grep -rn PLACEHOLDER_COPY src/` finds every not-yet-real piece of content across `hero.ts`/`about.ts`/`contact.ts` — useful for both US-018 (placeholder-realistic pass) and the eventual real-content swap.
   - `contact.ts` intentionally has zero logic beyond the config value, per its acceptance criteria — submit handling logic belongs in `ContactForm.svelte` (US-014), not here.
 ---
+
+## 2026-07-21 - US-005
+- Added `src/lib/components/HeroSection.svelte`, `AboutSection.svelte`, `SoftwareSection.svelte`, `CybersecuritySection.svelte` as placeholder components (`min-h-screen` sections with just a heading), each with the section id required by `docs/02-layout-and-nav.md` (`#hero`, `#about`, `#software`, `#cybersecurity`).
+- Rewrote `src/routes/+page.svelte` to compose the four sections in order inside a `bg-base text-text` `<main>`, removing the US-002 token smoke-test markup (its job — proving tokens compile — is done; real content starts now).
+- Verified with `rodney` (Chrome CLI automation, installed at `/opt/homebrew/bin/rodney`; run `rodney start --local` from the repo root to scope the session to `./.rodney/`) against `npm run dev`: all four `#hero`/`#about`/`#software`/`#cybersecurity` sections exist and are visible; `getBoundingClientRect()` on each confirms they stack at exactly 0/800/1600/2400/3200px with zero overlap or gap; `screenshot-el` on each section shows correct heading text, background, and font rendering at desktop (1440x900) and mobile (375x667) viewports.
+- **Learnings for future iterations:**
+  - `rodney` IS installed and available in this environment (`/opt/homebrew/bin/rodney`) — my first pass at this story incorrectly assumed no browser-automation tool existed and used a `curl`-only structural check instead. Always try `rodney --help` / `which rodney` before falling back to curl.
+  - `rodney js "<expr>"` only accepts a single expression, not multiple `;`-separated statements — use a comma expression `(a, b)` if you need to run one thing then read another in the same call.
+  - Between separate `rodney` CLI invocations, page state (e.g. `window.scrollY`, `performance.now()`) does not persist — each command appears to re-evaluate against a reloaded/fresh context. Don't rely on `window.scrollTo` in one call carrying over to a later `rodney screenshot` call; instead verify layout via `getBoundingClientRect()` (position at scroll=0 already proves stacking order/gaps) or use `screenshot-el <selector>` to capture a specific element regardless of scroll position.
+  - Section placeholder components already use their final ids/file names — later stories (US-007+) fill in real content in-place, they don't need to rename anything.
+---
