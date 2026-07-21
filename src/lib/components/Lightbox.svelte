@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ProjectImage } from '$lib/data/projects';
+	import { portal } from '$lib/actions/portal';
 
 	let {
 		images,
@@ -96,14 +97,25 @@
 		};
 	});
 
+	// Once portalled, dialogEl is a direct child of <body> — every OTHER direct child of
+	// <body> is background page content that should be unreachable (both to focus and to
+	// assistive-tech browse-mode navigation) while the dialog is open. Inert-removal and
+	// focus-restore are combined into one effect (not two separate ones) so cleanup order
+	// is guaranteed: focus() on triggerElement must run strictly after its inert ancestor
+	// is cleared, or the focus call silently fails and falls back to <body>.
 	$effect(() => {
+		if (!dialogEl) return;
+		const siblings = [...document.body.children].filter((el): el is HTMLElement => el !== dialogEl);
+		for (const el of siblings) el.inert = true;
 		return () => {
+			for (const el of siblings) el.inert = false;
 			triggerElement?.focus();
 		};
 	});
 </script>
 
 <div
+	use:portal
 	bind:this={dialogEl}
 	role="dialog"
 	aria-modal="true"
