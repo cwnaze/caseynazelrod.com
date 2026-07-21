@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { hero } from '$lib/data/hero';
+	import { base } from '$app/paths';
 
 	const CHAR_DELAY_MS = 10;
 	const LINE_PAUSE_MS = 100;
@@ -90,7 +91,7 @@
 				View Projects
 			</button>
 			<a
-				href={hero.resumeUrl}
+				href={base + hero.resumeUrl}
 				class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 			>
 				Resume

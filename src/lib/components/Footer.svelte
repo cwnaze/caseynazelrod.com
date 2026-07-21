@@ -3,6 +3,7 @@
 	import ContactForm from '$lib/components/ContactForm.svelte';
 	import GrowthAccent from '$lib/components/GrowthAccent.svelte';
 	import { reveal } from '$lib/actions/reveal';
+	import { base } from '$app/paths';
 </script>
 
 <GrowthAccent />
@@ -16,7 +17,7 @@
 
 	<div class="mt-12 flex flex-wrap gap-6 font-mono text-sm">
 		<a
-			href={hero.resumeUrl}
+			href={base + hero.resumeUrl}
 			class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 		>
 			Resume
