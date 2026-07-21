@@ -28,7 +28,12 @@ export const projects: Project[] = [
 		summary:
 			'Seed placeholder entry — real summary pending (see docs/04-software-section.md open questions).',
 		techStack: ['SvelteKit', 'TypeScript'],
-		images: [{ src: '/images/projects/civsail/1.png', alt: 'CivSail placeholder screenshot' }],
+		images: [
+			{
+				src: '/images/projects/civsail/1.png',
+				alt: 'Placeholder cover image representing the CivSail project (real screenshot pending)'
+			}
+		],
 		links: {},
 		year: 2025
 	},
@@ -38,7 +43,12 @@ export const projects: Project[] = [
 		summary:
 			'Seed placeholder entry — real summary pending (see docs/04-software-section.md open questions).',
 		techStack: ['TypeScript'],
-		images: [{ src: '/images/projects/nexus/1.png', alt: 'Nexus placeholder screenshot' }],
+		images: [
+			{
+				src: '/images/projects/nexus/1.png',
+				alt: 'Placeholder cover image representing the Nexus project (real screenshot pending)'
+			}
+		],
 		links: {},
 		year: 2025
 	}

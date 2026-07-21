@@ -45,9 +45,11 @@ export interface Accomplishment {
   link?: string;                 // e.g. writeup, article, or event page
 }
 
+export type SecurityToolCategory = "Offensive" | "Defensive" | "Forensics" | "GRC"; // extend as the real tool list is finalized
+
 export interface SecurityTool {
   name: string;                  // e.g. "Burp Suite"
-  category: string;              // resolved: grouped display, e.g. "Offensive" | "Defensive" | "Forensics" | "GRC"
+  category: SecurityToolCategory; // resolved: grouped display, literal union (not a plain string) to catch typos at compile time
 }
 
 export const certifications: Certification[] = [

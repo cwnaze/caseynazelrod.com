@@ -24,9 +24,13 @@ export interface Accomplishment {
 	link?: string; // e.g. writeup, article, or event page
 }
 
+// Real category list is still TBD per the owner's actual tools (see docs/05-cybersecurity-section.md
+// open questions); extend this union as needed rather than falling back to a plain string.
+export type SecurityToolCategory = 'Offensive' | 'Defensive' | 'Forensics' | 'GRC';
+
 export interface SecurityTool {
 	name: string; // e.g. "Burp Suite"
-	category: string; // e.g. "Offensive" | "Defensive" | "Forensics" | "GRC"
+	category: SecurityToolCategory;
 }
 
 export const certifications: Certification[] = [
