@@ -22,18 +22,18 @@
     },
     {
       "id": "US-002",
-      "title": "Implement design tokens in Tailwind config and load fonts",
-      "description": "As a developer, I need the palette, typography, and hard-edge/shadow tokens from docs/01-design-system.md expressed as Tailwind theme.extend config plus mirrored :root CSS variables, and both fonts loaded, so every later component styles against one consistent source.",
+      "title": "Implement design tokens via Tailwind v4 @theme and load fonts",
+      "description": "As a developer, I need the palette and typography tokens from docs/01-design-system.md expressed as a Tailwind v4 @theme block (this project's Tailwind is CSS-first, not tailwind.config.ts) so every later component styles against one consistent source, with both fonts self-hosted and loaded.",
       "acceptanceCriteria": [
-        "tailwind.config.ts theme.extend defines colors (base #111a10, surface #182415, green #5fa842/bright #84cc4f, purple #9b6dc4/deep #6b4a8f, text #eaf0e4/muted #b9c2b3), fontFamily (mono: JetBrains Mono stack, sans: Inter stack), and borderRadius.none = 0px",
-        "Matching CSS custom properties (--color-base, --color-surface, --color-green, --color-green-bright, --color-purple, --color-purple-deep, --color-text, --color-text-muted) are emitted once at :root with values identical to the Tailwind config",
-        "JetBrains Mono and Inter are self-hosted and loaded with font-display: swap",
+        "src/routes/layout.css defines an @theme block with colors (base #111a10, surface #182415, green #5fa842/bright #84cc4f, purple #9b6dc4/deep #6b4a8f, text #eaf0e4/muted #b9c2b3) and fontFamily tokens (font-mono: JetBrains Mono stack, font-sans: Inter stack)",
+        "Tailwind v4 auto-emits these as real :root, :host CSS custom properties in the compiled build output (verified by inspecting build output CSS) — no separate hand-written mirrored :root block needed",
+        "JetBrains Mono and Inter are self-hosted (e.g. via @fontsource-variable packages) and loaded with font-display: swap",
         "A test page renders base background, text color, and both fonts correctly with no layout shift after font load",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

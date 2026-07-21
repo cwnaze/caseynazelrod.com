@@ -35,7 +35,7 @@ Enumerate every Svelte component in the site, its props/state, and which data it
 | `data/hero.ts` | `src/lib/data/hero.ts` | Hero copy + boot-lines + placeholder link config (03) |
 | `data/about.ts` | `src/lib/data/about.ts` | About copy + Experience entries config (03) |
 | `data/contact.ts` | `src/lib/data/contact.ts` | Contact form submit-endpoint config (placeholder now, Resend later) (00) |
-| `styles/tokens.css` | `src/lib/styles/tokens.css` | Design tokens: color, type, spacing, shadow/border (01) |
+| `routes/layout.css` | `src/routes/layout.css` | Tailwind v4 entry + `@theme` design tokens: color, typography (01) |
 | `actions/reveal.ts` | `src/lib/actions/reveal.ts` | Svelte action wrapping the scroll-reveal `IntersectionObserver` (02) |
 | `actions/trapFocus.ts` | `src/lib/actions/trapFocus.ts` | Focus-trap utility used by `Lightbox.svelte` (04) |
 

@@ -18,8 +18,8 @@ Sequence implementation into independently reviewable phases, from an empty repo
 - **Acceptance:** `npm run build` produces a static `build/` output with a placeholder page using at least one Tailwind utility class; `npm run check` (typecheck) and `npm run lint` pass.
 
 ### Phase 2 — Design Tokens & Global Styles
-- Implement `tailwind.config.ts` theme extension (colors, fonts, `borderRadius: none`) per `01-design-system.md`; emit the mirrored `:root` CSS custom properties for JS/canvas consumers (scanline, glitch effects).
-- Self-host and load JetBrains Mono + Inter with `font-display: swap`.
+- Implement the color/font `@theme` block in `src/routes/layout.css` per `01-design-system.md` (Tailwind v4 is CSS-first — no `tailwind.config.ts`; `@theme` values are auto-emitted as real `:root, :host` CSS custom properties, so no separate mirrored block is needed for JS/canvas consumers).
+- Self-host and load JetBrains Mono + Inter (variable weight, via `@fontsource-variable/*`) with `font-display: swap`.
 - **Acceptance:** A bare test page renders the base background, text color, and both font families correctly; contrast spot-checked against the audit table in `01-design-system.md`.
 
 ### Phase 3 — Data Models

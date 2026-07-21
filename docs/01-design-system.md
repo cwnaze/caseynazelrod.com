@@ -18,33 +18,15 @@ Define the visual language ("terminal/CRT meets botanical") as concrete, impleme
 - NFR-3: Focus states must be visible via keyboard (`:focus-visible`) with at least 3:1 contrast against the adjacent background, independent of hover styling.
 
 ## Styling Implementation: Tailwind
-Owner has chosen Tailwind CSS over hand-rolled CSS custom properties. Tokens below are still centrally defined — as `theme.extend` entries in `tailwind.config.ts` — so the palette/spacing/shadow system stays a single source of truth instead of being reintroduced as ad-hoc utility values in markup. CSS custom properties are additionally emitted at `:root` (mapped 1:1 from the Tailwind theme) purely so JS (e.g. canvas/SVG effects, dynamically-drawn scanline overlays) can read the same values without duplicating hex codes.
-
-```ts
-// tailwind.config.ts (excerpt)
-export default {
-  theme: {
-    extend: {
-      colors: {
-        base: "#111a10",
-        surface: "#182415",       // resolved: slightly lifted panel bg vs. base
-        green: { DEFAULT: "#5fa842", bright: "#84cc4f" },
-        purple: { DEFAULT: "#9b6dc4", deep: "#6b4a8f" },
-        text: { DEFAULT: "#eaf0e4", muted: "#b9c2b3" }, // resolved
-      },
-      fontFamily: {
-        mono: ["JetBrains Mono", "IBM Plex Mono", "ui-monospace", "monospace"], // resolved: self-hosted variable font
-        sans: ["Inter", "ui-sans-serif", "system-ui"],                          // resolved: body copy
-      },
-      borderRadius: { none: "0px" }, // resolved: hard edges everywhere, no rounded corners
-    },
-  },
-};
-```
+Owner has chosen Tailwind CSS over hand-rolled CSS custom properties. This project uses **Tailwind CSS v4** (`@tailwindcss/vite`), which is CSS-first — theme tokens are defined via an `@theme` block in the global stylesheet (`src/routes/layout.css`), not a `tailwind.config.ts` `theme.extend` object (that's the v3 pattern; confirmed not applicable once the actual scaffold was in place — see `agents/progress.txt`). Tailwind v4 automatically emits every `@theme` value as a real `:root, :host` CSS custom property in the compiled output, so no separate mirrored `:root` block is needed — JS/canvas consumers (scanline, glitch effects) read the same `var(--color-*)` names Tailwind utilities compile to.
 
 ```css
-/* Emitted once at :root for JS/canvas consumers — values must match tailwind.config.ts exactly */
-:root {
+/* src/routes/layout.css (excerpt) */
+@import 'tailwindcss';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/inter';
+
+@theme {
   --color-base: #111a10;
   --color-surface: #182415;
   --color-green: #5fa842;
@@ -53,8 +35,15 @@ export default {
   --color-purple-deep: #6b4a8f;
   --color-text: #eaf0e4;
   --color-text-muted: #b9c2b3;
+
+  --font-mono: 'JetBrains Mono Variable', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 ```
+
+This generates utilities `bg-base`/`text-base`, `text-green`/`text-green-bright`, `text-purple`/`text-purple-deep`, `text-text`/`text-text-muted`, `bg-surface`, `font-mono`, `font-sans`, etc. Fonts are self-hosted via the `@fontsource-variable/jetbrains-mono` and `@fontsource-variable/inter` npm packages (variable-weight woff2, subset by `unicode-range`, `font-display: swap` built in) rather than hand-sourced font files.
+
+**Corner radius:** no theme override needed — Tailwind ships no border-radius by default unless a `rounded-*` utility is explicitly applied, so "hard edges everywhere" is satisfied by simply never adding `rounded-*` classes, not by a config override.
 
 ## Contrast Audit (WCAG AA, computed against `--color-base` #111a10)
 | Foreground | Ratio vs base | Normal text (4.5:1) | Large text/UI (3:1) |

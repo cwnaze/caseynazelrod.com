@@ -27,7 +27,7 @@ Define the goals, audience, tech stack, and high-level architecture for caseynaz
 | Svelte 5 + SvelteKit | Runes (`$state`, `$effect`, `$derived`) give fine-grained reactivity with less boilerplate than stores; SvelteKit's file-based routing is overkill for one page but gives `adapter-static` for free plus a clean project scaffold. |
 | `@sveltejs/adapter-static` | Site is fully static content (no user data, no auth, no server logic) — prerendering to static HTML/CSS/JS is the simplest, cheapest, most portable deploy target. |
 | TypeScript | Content (`projects.ts`, `certs.ts`) is data-driven; typed interfaces catch malformed entries at build time instead of at runtime in the browser. |
-| Tailwind CSS | Chosen by owner over hand-rolled CSS. Palette/spacing/shadow tokens are still centralized in `tailwind.config.ts` (`theme.extend`) so the bespoke look stays consistent — Tailwind is used as a utility layer over custom tokens, not swapped for a generic component kit/UI library. |
+| Tailwind CSS v4 | Chosen by owner over hand-rolled CSS. Palette/spacing/shadow tokens are centralized in a CSS `@theme` block (`src/routes/layout.css`) so the bespoke look stays consistent — Tailwind is used as a utility layer over custom tokens, not swapped for a generic component kit/UI library. |
 | No backend / no CMS | Content changes are infrequent and made by the owner directly in code; a CMS adds operational surface area for no real benefit at this scale. |
 
 ## High-Level Architecture
@@ -35,7 +35,7 @@ Define the goals, audience, tech stack, and high-level architecture for caseynaz
 - A `Nav.svelte` component is fixed/sticky and reads scroll position via `IntersectionObserver` to highlight the active section; it does not own routing (no client-side route changes, just scroll + hash anchors).
 - Content lives in `src/lib/data/projects.ts` and `src/lib/data/certs.ts`, imported directly by section components — no fetch, no API layer.
 - Static assets (project screenshots, cert badges) live under `static/` and are referenced by path from the data files.
-- Global design tokens (colors, spacing, typography, shadow/border primitives) live in a single CSS file (e.g. `src/lib/styles/tokens.css`) imported once at the root layout, per `01-design-system.md`.
+- Global design tokens (colors, typography) live in a single `@theme` block in `src/routes/layout.css`, imported once at the root layout, per `01-design-system.md`.
 
 ## Deploy Target
 - Build output: fully static via `adapter-static` (`fallback` disabled — this is a single prerendered page, not an SPA needing a 404 fallback).
@@ -59,7 +59,7 @@ This project is driven by the Ralph autonomous loop (`agents/ralph.md` + `agents
 
 ## Resolved Decisions
 1. DNS — owner configures after project completion; not a build blocker.
-2. Styling — Tailwind CSS, tokens centralized in `tailwind.config.ts`.
+2. Styling — Tailwind CSS v4, tokens centralized in a CSS `@theme` block (not `tailwind.config.ts` — v4 is CSS-first).
 3. Analytics — none for v1.
 4. Contact — form UI with a placeholder/stub backend now, Resend integration later.
 5. Repo — confirmed empty; build starts from scaffold (`08-build-plan.md` Phase 1).

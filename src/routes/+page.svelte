@@ -1,2 +1,21 @@
-<h1 class="text-3xl font-bold">Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<!-- Temporary token/font smoke-test page — replaced by real sections in later stories (US-005+). -->
+<main class="min-h-screen bg-base p-8 text-text">
+	<h1 class="font-sans text-3xl font-bold">Design token smoke test</h1>
+	<p class="font-sans">
+		Body copy in Inter (<code class="font-mono text-sm">font-sans</code>).
+	</p>
+	<p class="font-mono">
+		Accent copy in JetBrains Mono (<code class="font-mono text-sm">font-mono</code>).
+	</p>
+	<ul class="mt-4 space-y-1">
+		<li class="text-green">Green: --color-green</li>
+		<li class="text-green-bright">Bright green: --color-green-bright</li>
+		<li class="text-purple">Purple: --color-purple</li>
+		<li class="border-2 border-purple-deep pl-2">
+			Purple deep (border/shadow only, never as text color — see contrast audit in
+			docs/01-design-system.md): --color-purple-deep
+		</li>
+		<li class="text-text-muted">Muted text: --color-text-muted</li>
+		<li class="bg-surface p-2">Surface background: --color-surface</li>
+	</ul>
+</main>
