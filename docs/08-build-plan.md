@@ -71,8 +71,7 @@ Sequence implementation into independently reviewable phases, from an empty repo
 ## Ralph Integration
 - `agents/prd.json` decomposes Phases 1–11 into individually-sized user stories (see file for exact breakdown — several phases split into 2+ stories where a phase is too large for one agent iteration, e.g. Software section splits into card+data wiring, lightbox, and image-optimization stories).
 - `agents/progress.txt` is seeded fresh (no unrelated prior-project history) and accumulates Ralph's per-story learnings as the build proceeds.
-- `agents/ralph.md` (already present in this repo) is the generic driver; no project-specific changes needed there — it reads `prd.json`/`progress.txt` from its own directory.
-- Run via `.claude/workflows/ralph-loop.js`, which spawns one fresh agent per story in priority order until all stories pass.
+- **Branch/PR/review model (not the fully autonomous loop):** each story is implemented on its own branch off `main` (`ralph/<story-id>-<slug>`), opens a PR, and stops — see `agents/ralph.md`. A human reviews and merges the PR before the next story's iteration starts. The next iteration is triggered manually, not via `.claude/workflows/ralph-loop.js`'s continuous spawn-until-done behavior (that workflow has no merge gate, so it isn't used here).
 
 ## Acceptance Criteria (plan-level)
 - [ ] Each phase above has its own PR/commit boundary and passes its stated acceptance check before the next phase starts.

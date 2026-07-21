@@ -1,7 +1,7 @@
 {
   "project": "caseynazelrod.com — Terminal/CRT Botanical Portfolio",
-  "branchName": "ralph/portfolio-build",
-  "description": "Single-page scroll portfolio (Svelte 5 + SvelteKit, adapter-static, Tailwind CSS) with a 'terminal/CRT meets botanical' design language — hard edges, offset hard-shadows, green/purple grass-and-wildflower palette, distinctive no-AI-glow animations. Built per docs/00-overview.md through docs/08-build-plan.md.",
+  "branchName": "ralph/<story-id>-<slug> (per-story branch prefix — see agents/ralph.md; each story gets its own branch off main, not one shared branch)",
+  "description": "Single-page scroll portfolio (Svelte 5 + SvelteKit, adapter-static, Tailwind CSS) with a 'terminal/CRT meets botanical' design language — hard edges, offset hard-shadows, green/purple grass-and-wildflower palette, distinctive no-AI-glow animations. Built per docs/00-overview.md through docs/08-build-plan.md. Delivered one story at a time: each story branches off main, opens a PR, and waits for human merge before the next story starts.",
   "userStories": [
     {
       "id": "US-001",

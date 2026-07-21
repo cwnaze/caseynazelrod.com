@@ -2,13 +2,13 @@
 
 You are an autonomous coding agent working on a software project.
 
-**Driver:** these instructions describe ONE iteration only and assume a fresh agent with no memory of prior iterations. To run Ralph end-to-end, invoke the `.claude/workflows/ralph-loop.js` Workflow — it spawns a new, context-free agent per story and stops when all stories pass or an iteration reports no progress.
+**Driver:** these instructions describe ONE iteration only and assume a fresh agent with no memory of prior iterations. **This project uses a per-story branch + PR + human-merge-gate workflow, not the fully autonomous `ralph-loop.js` loop** — each iteration implements exactly one story, opens a PR, and stops. The next iteration is only triggered manually (by the human) after that PR is merged, so do not chain into the next story automatically.
 
 ## Your Task
 
 1. Read the PRD at `prd.json` (in the same directory as this file)
 2. Read the progress log at `progress.txt` (check Codebase Patterns section first)
-3. Check you're on the correct branch from PRD `branchName`. If not, check it out or create from main.
+3. Ensure `main` is up to date (`git checkout main && git pull`), then create a **new branch for this story only**, named `ralph/<story-id>-<short-slug>` (e.g. `ralph/us-001-scaffold`) — branched from the latest `main`, never reusing a prior story's branch and never committing multiple stories to one branch.
 4. Pick the user story with `passes: false` that has the **lowest `priority` number** (1 is highest priority and runs first; higher numbers run later)
 5. Run `showboat init docs/demos/<story_id>.md "<Story Title>"` to begin the proof-of-work log.
 6. Implement that single user story. Document your progress and capture all successful quality checks (test, lint, typecheck) using the appropriate `showboat` commands.
@@ -22,8 +22,9 @@ You are an autonomous coding agent working on a software project.
 11. Run `showboat verify`. It must exit 0. If it fails, fix the code/demo and retry.
 12. Update CLAUDE.md files if you discover reusable patterns (see below)
 13. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
-14. Update the PRD to set `passes: true` for the completed story
-15. Append your progress to `progress.txt`
+14. Update the PRD to set `passes: true` for the completed story, and commit that PRD update on the same story branch
+15. Append your progress to `progress.txt`, and commit that update on the same story branch
+16. Push the branch (`git push -u origin <branch-name>`) and open a PR against `main` via `gh pr create` — title `[Story ID] Story Title`, body summarizing what was implemented and how it was verified. Do **not** merge it yourself.
 
 ### Tool Discovery & Usage Rules
 You have two primary specialized tools. Treat their `--help` outputs as your definitive skill specifications:
@@ -108,16 +109,15 @@ If no browser tools are available, note in your progress report that manual brow
 
 ## Stop Condition
 
-After completing a user story, check if ALL stories have `passes: true`.
+**Always stop after one story, regardless of how many stories remain.** Once the PR is opened for the current story, report the PR URL and stop — do not check out another story or start implementing further work in this iteration. A human reviews and merges the PR; the next iteration (a fresh agent invocation) only starts after that merge and is triggered manually, not automatically.
 
-If ALL stories are complete and passing, reply with:
-<promise>COMPLETE</promise>
-
-If there are still stories with `passes: false`, end your response normally (another iteration will pick up the next story).
+If, after opening the PR, every story in `prd.json` already has `passes: true` (i.e. this was the last one), say so explicitly in your final report in addition to the PR URL.
 
 ## Important
 
-- Work on ONE story per iteration
-- Commit frequently
+- Work on ONE story per iteration, on its own branch, ending in exactly one open PR
+- Never merge your own PR
+- Never start a second story in the same iteration, even if time/context remains
+- Commit frequently within the story's branch
 - Keep CI green
 - Read the Codebase Patterns section in progress.txt before starting
