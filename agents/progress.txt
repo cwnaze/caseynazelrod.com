@@ -5,6 +5,10 @@
 - Tailwind CSS v4 is wired via the `@tailwindcss/vite` plugin (not a `tailwind.config.js` + PostCSS pipeline) — theme customization for docs/01-design-system.md's tokens should go through Tailwind v4's CSS-based `@theme` config, not a `tailwind.config.ts` `theme.extend` block (that's the v3 pattern the PRD assumed; confirm the v4 equivalent when doing US-002).
 - `npm run check` = typecheck (`svelte-kit sync && svelte-check`), `npm run lint` = `prettier --check . && eslint .`, `npm run build` = `vite build` (outputs static site to `build/`).
 - `.prettierignore` excludes `/docs/`, `/agents/`, and `/.claude/` — these are hand-authored project docs/agent files and local tool config, not app source; Prettier's default file walk would otherwise reformat and reflow the markdown/JSON prose there.
+- Design tokens live in an `@theme { ... }` block inside `src/routes/layout.css` (imported once via the root layout). Tailwind v4 auto-generates a `:root, :host { --color-base: ...; --font-mono: ...; }` block in the compiled CSS from every `@theme` entry — no need to hand-write a separate mirrored `:root` block for JS/canvas consumers, `var(--color-*)` and `var(--font-*)` are already real custom properties.
+- Color/font utility class names follow Tailwind's `--color-<name>` / `--font-<name>` → `<utility>-<name>` mapping directly: `--color-green-bright` → `text-green-bright`/`bg-green-bright`, `--color-text-muted` → `text-text-muted` (note the doubled "text"), `--font-mono` → `font-mono`.
+- Fonts are self-hosted via `@fontsource-variable/jetbrains-mono` and `@fontsource-variable/inter` (npm packages, imported via `@import` in `layout.css`) rather than manually sourced font files — these already ship variable-weight woff2 subset by `unicode-range` with `font-display: swap` built in.
+- No border-radius config override was needed for "hard edges everywhere" — Tailwind applies no radius unless a `rounded-*` utility is used, so the requirement is satisfied by omission, not a theme reset.
 
 ## Progress Log
 
@@ -17,4 +21,15 @@
 - **Learnings for future iterations:**
   - No `svelte.config.js` exists in this project — adapter/compiler config lives in `vite.config.ts`. Don't create a `svelte.config.js` expecting it to be read.
   - Tailwind v4's `@tailwindcss/vite` plugin means design tokens (US-002) should be defined via CSS `@theme` in the global stylesheet, not `tailwind.config.ts` — re-check `docs/01-design-system.md`'s Tailwind config snippet against actual v4 syntax before implementing US-002.
+---
+
+## 2026-07-21 - US-002
+- Implemented the full color + font token set from `docs/01-design-system.md` as an `@theme` block in `src/routes/layout.css`, and self-hosted JetBrains Mono + Inter via `@fontsource-variable/jetbrains-mono` / `@fontsource-variable/inter`.
+- Set `body { background-color: var(--color-base); color: var(--color-text); }` in the same file as the baseline page background/text.
+- Replaced the US-001 placeholder page with a token/font smoke-test page (`src/routes/+page.svelte`) exercising every color and both font utilities — this is temporary and will be replaced by real sections starting at US-005.
+- Verified by inspecting `build/_app/immutable/assets/*.css`: all `--color-*`/`--font-*` custom properties are present in a `:root,:host{...}` block, and both `text-green-bright`/`bg-base` utilities compile to `var(--color-*)` references as expected.
+- Updated `docs/00-overview.md`, `docs/01-design-system.md`, `docs/07-component-inventory.md`, and `docs/08-build-plan.md` to replace the incorrect `tailwind.config.ts`/`styles/tokens.css` assumptions with the actual Tailwind v4 `@theme`-in-`layout.css` approach, and updated US-002's acceptance criteria in `agents/prd.json` to match.
+- **Learnings for future iterations:**
+  - Don't reach for `tailwind.config.ts` anywhere in this project — it doesn't exist and isn't read; all theme customization goes in the `@theme` block in `src/routes/layout.css`.
+  - When adding a new color/font token, only the `@theme` block needs updating — Tailwind regenerates both the utility classes and the `:root` custom property automatically.
 ---
