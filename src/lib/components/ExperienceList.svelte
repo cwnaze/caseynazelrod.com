@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ExperienceEntry } from '$lib/data/about';
+	import { formatMonthYear } from '$lib/utils/date';
 
 	let { items }: { items: ExperienceEntry[] } = $props();
 
@@ -15,18 +16,9 @@
 		})
 	);
 
-	function formatDate(isoDate: string) {
-		const [year, month] = isoDate.split('-').map(Number);
-		return new Date(Date.UTC(year, month - 1)).toLocaleDateString('en-US', {
-			month: 'short',
-			year: 'numeric',
-			timeZone: 'UTC'
-		});
-	}
-
 	function formatRange(entry: ExperienceEntry) {
-		const start = formatDate(entry.startDate);
-		const end = entry.endDate ? formatDate(entry.endDate) : 'Present';
+		const start = formatMonthYear(entry.startDate);
+		const end = entry.endDate ? formatMonthYear(entry.endDate) : 'Present';
 		return `${start} – ${end}`;
 	}
 </script>
