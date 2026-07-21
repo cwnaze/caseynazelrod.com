@@ -53,7 +53,7 @@ Breakpoints exposed as CSS custom media or plain `@media (min-width: ...)` queri
 ## Scroll-Reveal Interactions
 - Each section's direct children that should reveal (headings, cards, images) get a `data-reveal` attribute; a shared `IntersectionObserver` (or per-element observers if simpler) adds a `.is-visible` class the first time the element crosses ~20% into the viewport.
 - Animation: opacity 0→1 and a small upward translate (e.g. `translateY(12px)→0`) over ~400ms, staggered slightly for grids (e.g. 60ms per card index) — **open question: confirm stagger is wanted or if all elements in a section should reveal simultaneously.**
-- Once revealed, an element does not hide again on scroll-up (one-shot reveal, observer unobserves the element after triggering).
+- **Resolved (superseding the original one-shot plan, per owner feedback during US-016 review):** the reveal is **repeatable**, not one-shot — scrolling an element out of view removes `.is-visible` again, so scrolling back to it re-plays the fade-in every time, without needing a page reload. The `IntersectionObserver` stays attached for the component's lifetime (never unobserves after first trigger).
 
 ## Acceptance Criteria
 - [ ] Exactly one nav item is marked active at any scroll position, with no flicker between adjacent sections during continuous scroll.

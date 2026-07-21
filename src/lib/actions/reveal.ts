@@ -7,8 +7,9 @@ interface RevealParams {
 
 /**
  * Adds `is-visible` (see the `.reveal`/`.is-visible` CSS in layout.css — opacity/transform
- * only, never layout-affecting properties) the first time the element crosses ~20% into the
- * viewport, then stops observing it (one-shot; scrolling back up never re-hides it).
+ * only, never layout-affecting properties) whenever the element crosses ~20% into the
+ * viewport, and removes it as soon as the element leaves — repeatable, so scrolling away
+ * and back re-plays the fade-in every time, not just once per page load.
  * Under prefers-reduced-motion, skips the hidden state entirely so nothing needs to animate in.
  */
 export const reveal: Action<HTMLElement, RevealParams | undefined> = (node, params) => {
@@ -25,9 +26,12 @@ export const reveal: Action<HTMLElement, RevealParams | undefined> = (node, para
 	const observer = new IntersectionObserver(
 		(entries) => {
 			for (const entry of entries) {
-				if (!entry.isIntersecting) continue;
-				timeoutId = setTimeout(() => node.classList.add('is-visible'), delayMs);
-				observer.unobserve(node);
+				clearTimeout(timeoutId);
+				if (entry.isIntersecting) {
+					timeoutId = setTimeout(() => node.classList.add('is-visible'), delayMs);
+				} else {
+					node.classList.remove('is-visible');
+				}
 			}
 		},
 		{ threshold: 0.2 }
