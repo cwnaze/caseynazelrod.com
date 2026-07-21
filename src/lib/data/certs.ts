@@ -35,20 +35,28 @@ export interface SecurityTool {
 
 export const certifications: Certification[] = [
 	{
-		id: 'cert-1-placeholder',
-		name: 'Seed placeholder cert 1',
-		issuer: 'Seed placeholder issuer',
-		issueDate: '2024-01-01',
-		expiryDate: '2026-09-01',
-		status: 'active'
+		id: 'security-plus',
+		// PLACEHOLDER_COPY: real cert name/issuer/dates pending owner confirmation
+		name: 'CompTIA Security+',
+		issuer: 'CompTIA',
+		issueDate: '2024-09-15',
+		expiryDate: '2026-09-15',
+		status: 'active',
+		// PLACEHOLDER_COPY: real credential ID/verify URL pending
+		credentialId: 'COMP001234567890',
+		verifyUrl: 'https://example.com/verify/security-plus'
 	},
 	{
-		id: 'cert-2-placeholder',
-		name: 'Seed placeholder cert 2',
-		issuer: 'Seed placeholder issuer',
-		issueDate: '2024-01-01',
-		expiryDate: '2026-09-01',
-		status: 'active'
+		id: 'aws-saa',
+		// PLACEHOLDER_COPY: real cert name/issuer/dates pending owner confirmation
+		name: 'AWS Certified Solutions Architect – Associate',
+		issuer: 'Amazon Web Services',
+		issueDate: '2024-10-01',
+		expiryDate: '2026-10-01',
+		status: 'active',
+		// PLACEHOLDER_COPY: real credential ID/verify URL pending
+		credentialId: 'AWS-PLACEHOLDER-0001',
+		verifyUrl: 'https://example.com/verify/aws-saa'
 	},
 	{
 		id: 'cpts',
@@ -60,16 +68,30 @@ export const certifications: Certification[] = [
 
 export const accomplishments: Accomplishment[] = [
 	{
-		id: 'ctf-placeholder-1',
-		title: 'Seed placeholder CTF/competition placement 1'
+		id: 'ctf-regional-2025',
+		// PLACEHOLDER_COPY: real placement/competition name/date pending
+		title: '2nd Place, Regional Collegiate Cyber Defense Competition',
+		description:
+			'Team placement in a regional qualifier defending a simulated corporate network against live red-team attacks.',
+		date: '2025-03-01'
 	},
 	{
-		id: 'ctf-placeholder-2',
-		title: 'Seed placeholder CTF/competition placement 2'
+		id: 'ctf-national-cyber-league',
+		// PLACEHOLDER_COPY: real placement/competition name/date pending
+		title: 'Top 10%, National Cyber League (Individual Game)',
+		description:
+			'Individual placement across categories including cryptography, log analysis, and network traffic analysis.',
+		date: '2024-11-01'
 	}
 ];
 
 export const securityTools: SecurityTool[] = [
-	{ name: 'Seed placeholder tool 1', category: 'Offensive' },
-	{ name: 'Seed placeholder tool 2', category: 'Defensive' }
+	// PLACEHOLDER_COPY: real tool list pending owner confirmation (see docs/05-cybersecurity-section.md open questions)
+	{ name: 'Burp Suite', category: 'Offensive' },
+	{ name: 'Nmap', category: 'Offensive' },
+	{ name: 'Metasploit', category: 'Offensive' },
+	{ name: 'Wireshark', category: 'Defensive' },
+	{ name: 'Splunk', category: 'Defensive' },
+	{ name: 'Autopsy', category: 'Forensics' },
+	{ name: 'Volatility', category: 'Forensics' }
 ];

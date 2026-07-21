@@ -12,10 +12,11 @@ export interface AboutContent {
 }
 
 export const about: AboutContent = {
-	// PLACEHOLDER_COPY: real narrative pending (see docs/03-hero-about.md open questions)
+	// PLACEHOLDER_COPY: real narrative pending (see docs/03-hero-about.md open questions) —
+	// the paragraphs below are plausible placeholder prose, not confirmed biographical fact.
 	narrative: [
-		'PLACEHOLDER_COPY: real About narrative pending.',
-		'PLACEHOLDER_COPY: background story and dev+security framing to be supplied.'
+		"I'm a software developer and cybersecurity practitioner who likes building things and then trying to break them — usually in that order, occasionally not.",
+		'My work spans full-stack development and offensive security: shipping production features during the day, and working through CTFs and cert coursework on the side. I like the overlap between the two disciplines more than either one alone — writing code makes me a better attacker, and thinking like an attacker makes me write safer code.'
 	],
 	currentlyBuilding: 'a full agentic development suite (Hermes agent)',
 	experience: [
