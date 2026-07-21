@@ -36,6 +36,11 @@ export default defineConfig(
 	{
 		// Override or add rule settings here, such as:
 		// 'svelte/button-has-type': 'error'
-		rules: {}
+		rules: {
+			// This is a single-route static site (no internal SvelteKit-routed pages) — every
+			// href here is either external or a static asset, so resolve()-based internal
+			// navigation checking doesn't apply.
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	}
 );
