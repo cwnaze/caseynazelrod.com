@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { hero } from '$lib/data/hero';
+	import ScrollCue from '$lib/components/ScrollCue.svelte';
 
 	const CHAR_DELAY_MS = 10;
 	const LINE_PAUSE_MS = 100;
@@ -62,7 +63,7 @@
 	});
 </script>
 
-<section id="hero" class="flex min-h-screen flex-col justify-center p-8">
+<section id="hero" class="relative flex min-h-screen flex-col justify-center p-8">
 	<div class="mx-auto w-full max-w-6xl">
 		<div aria-hidden="true" class="mb-4 font-mono text-sm text-green-bright">
 			{#each displayedBootLines as line, i (i)}
@@ -115,4 +116,6 @@
 			</div>
 		</div>
 	</div>
+
+	<ScrollCue />
 </section>

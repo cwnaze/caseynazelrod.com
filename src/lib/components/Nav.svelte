@@ -76,7 +76,7 @@
 			class="glitch-hover font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 			onclick={() => scrollToSection('hero')}
 		>
-			casey@nazelrod:~$<span aria-hidden="true" class="cursor-blink">▌</span>
+			casey@nazelrod:~$
 		</button>
 
 		<ul class="hidden items-center gap-6 font-mono text-sm md:flex">
