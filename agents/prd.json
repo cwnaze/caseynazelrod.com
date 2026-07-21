@@ -180,8 +180,8 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "@sveltejs/enhanced-img wired via a custom import.meta.glob lookup (src/lib/images.ts) rather than static per-file imports, since project images are referenced dynamically via string keys in projects.ts. Verified in compiled build output: real AVIF/WebP/JPEG variants generated at multiple resolutions, <picture> markup with srcset/sizes present in build/index.html, width/height auto-set (prevents CLS), and the US-009 eager/lazy loading split on the first card is preserved. Confirmed visually with rodney that rendering is unchanged from before optimization."
     },
     {
       "id": "US-012",

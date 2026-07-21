@@ -22,7 +22,11 @@ Define the project card schema, the image gallery/lightbox behavior, and the Typ
 // src/lib/data/projects.ts
 
 export interface ProjectImage {
-  src: string;       // path under /static, e.g. "/images/projects/foo/1.png"
+  src: string;       // key resolved via src/lib/images.ts's resolveImage(), e.g. "projects/foo/1.png"
+                     // (not a /static path — actual files live under src/lib/images/ so
+                     // @sveltejs/enhanced-img/vite-imagetools can optimize them at build time;
+                     // resolveImage() looks the key up in an import.meta.glob(...{query:{enhanced:true}})
+                     // map and falls back to the raw string, which <enhanced:img> renders unoptimized)
   alt: string;        // required, meaningful alt text — not "screenshot"
   caption?: string;   // optional caption shown in lightbox
 }
@@ -81,7 +85,7 @@ export const projects: Project[] = [
 2. No `featured` tier — 2 launch projects render equal-weight.
 3. `year` is required and shown on every card.
 4. Touch/gesture support: swipe-to-navigate added to the lightbox on touch devices (in addition to on-screen buttons/keyboard) — low implementation cost, meaningfully improves the "impressive" feel on mobile, per the owner's "use your best judgment to make it look good and impressive" direction.
-5. Image pipeline: `@sveltejs/enhanced-img` added to the build plan (Phase 6) for responsive, modern-format images at build time.
+5. Image pipeline: `@sveltejs/enhanced-img` added to the build plan (Phase 6/US-011) for responsive, modern-format images at build time. Since project images are referenced dynamically via `ProjectImage.src` string keys in `projects.ts` (not statically imported per-image in markup, which is `<enhanced:img>`'s default usage pattern), images live under `src/lib/images/` and are resolved through `src/lib/images.ts`'s `resolveImage()` — an `import.meta.glob(..., { query: { enhanced: true } })` lookup keyed the same way, since `vite-imagetools` (which `enhanced-img` wraps) applies to any import using that query string, not just `<enhanced:img>` markup.
 6. Launch scale confirmed: 2 projects (CivSail, Nexus) — no pagination/"show more" needed; both render in the grid at once.
 
 ## Open Questions

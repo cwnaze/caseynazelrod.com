@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Project } from '$lib/data/projects';
+	import { resolveImage } from '$lib/images';
 
 	let {
 		project,
@@ -26,16 +27,16 @@
 				class="mb-4 block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 				onclick={(e) => onOpenGallery(project.slug, e.currentTarget)}
 			>
-				<img
-					src={thumbnail.src}
+				<enhanced:img
+					src={resolveImage(thumbnail.src)}
 					alt={thumbnail.alt}
 					loading={priority ? 'eager' : 'lazy'}
 					class="aspect-video w-full object-cover"
 				/>
 			</button>
 		{:else}
-			<img
-				src={thumbnail.src}
+			<enhanced:img
+				src={resolveImage(thumbnail.src)}
 				alt={thumbnail.alt}
 				loading={priority ? 'eager' : 'lazy'}
 				class="mb-4 aspect-video w-full object-cover"
