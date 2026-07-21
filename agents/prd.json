@@ -1,0 +1,303 @@
+{
+  "project": "caseynazelrod.com — Terminal/CRT Botanical Portfolio",
+  "branchName": "ralph/portfolio-build",
+  "description": "Single-page scroll portfolio (Svelte 5 + SvelteKit, adapter-static, Tailwind CSS) with a 'terminal/CRT meets botanical' design language — hard edges, offset hard-shadows, green/purple grass-and-wildflower palette, distinctive no-AI-glow animations. Built per docs/00-overview.md through docs/08-build-plan.md.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Scaffold SvelteKit project with static adapter and tooling",
+      "description": "As a developer, I need a working SvelteKit + TypeScript project scaffolded in this (currently empty) repo, configured for static prerendering and with baseline tooling in place, so all later work has a stable foundation.",
+      "acceptanceCriteria": [
+        "SvelteKit project initialized with TypeScript in the repo root",
+        "@sveltejs/adapter-static installed and configured in svelte.config.js; root layout/page sets export const prerender = true",
+        "Tailwind CSS installed and wired into the Vite/SvelteKit build (a Tailwind utility class renders correctly on a placeholder page)",
+        "ESLint + Prettier (with prettier-plugin-tailwindcss) configured; svelte-check available as the typecheck command",
+        "npm run build produces a static build/ output",
+        "Typecheck passes",
+        "Lint passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Implement design tokens in Tailwind config and load fonts",
+      "description": "As a developer, I need the palette, typography, and hard-edge/shadow tokens from docs/01-design-system.md expressed as Tailwind theme.extend config plus mirrored :root CSS variables, and both fonts loaded, so every later component styles against one consistent source.",
+      "acceptanceCriteria": [
+        "tailwind.config.ts theme.extend defines colors (base #111a10, surface #182415, green #5fa842/bright #84cc4f, purple #9b6dc4/deep #6b4a8f, text #eaf0e4/muted #b9c2b3), fontFamily (mono: JetBrains Mono stack, sans: Inter stack), and borderRadius.none = 0px",
+        "Matching CSS custom properties (--color-base, --color-surface, --color-green, --color-green-bright, --color-purple, --color-purple-deep, --color-text, --color-text-muted) are emitted once at :root with values identical to the Tailwind config",
+        "JetBrains Mono and Inter are self-hosted and loaded with font-display: swap",
+        "A test page renders base background, text color, and both fonts correctly with no layout shift after font load",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Add projects and certs data models",
+      "description": "As a developer, I need typed data files for projects and cybersecurity content so sections can be built against a stable content contract before real copy exists.",
+      "acceptanceCriteria": [
+        "src/lib/data/projects.ts exports ProjectImage and Project interfaces (per docs/04-software-section.md: slug, title, summary, description?, techStack, images, links {demo?, repo?, writeup?}, year required) and a projects: Project[] array with 2 seed/placeholder entries",
+        "src/lib/data/certs.ts exports CertStatus, Certification, Accomplishment, SecurityTool interfaces (per docs/05-cybersecurity-section.md, including required category on SecurityTool) and seed arrays for certifications, accomplishments, securityTools",
+        "All seed entries typecheck against their interfaces with no 'any'",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Add hero, about, and contact data models",
+      "description": "As a developer, I need typed data files for the Hero, About (including Experience), and contact-form endpoint config so those sections and the footer are content-driven from a single edit point.",
+      "acceptanceCriteria": [
+        "src/lib/data/hero.ts exports HeroContent interface (bootLines, name, title, tagline, resumeUrl, githubUrl, linkedinUrl) and a hero: HeroContent value with placeholder resume/GitHub/LinkedIn URLs",
+        "src/lib/data/about.ts exports ExperienceEntry and AboutContent interfaces (narrative, currentlyBuilding, experience) and an about: AboutContent value including 2 placeholder Experience entries (Finback 670, InvitaHealth)",
+        "src/lib/data/contact.ts exports a config value holding the placeholder form-submit endpoint (swappable later for Resend) with no other logic",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Build page shell with four section placeholders",
+      "description": "As a visitor, I need the single-page scroll structure in place (Hero, About, Software, Cybersecurity as distinct sections with stable ids) so navigation and later section content have something to attach to.",
+      "acceptanceCriteria": [
+        "src/routes/+page.svelte composes four section elements with ids #hero, #about, #software, #cybersecurity in that order",
+        "Each section is a distinct Svelte component file (HeroSection.svelte, AboutSection.svelte, SoftwareSection.svelte, CybersecuritySection.svelte) even if currently rendering placeholder content",
+        "Page scrolls continuously through all four sections with no overlap or broken layout at mobile/tablet/desktop breakpoints (640px/1024px)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Implement sticky Nav with IntersectionObserver active-section logic",
+      "description": "As a visitor, I need a sticky nav that highlights whichever section I'm currently viewing and lets me jump to any section, so I can orient and navigate the single-page site.",
+      "acceptanceCriteria": [
+        "Nav.svelte is sticky/fixed at the top across all breakpoints, using Svelte 5 runes ($state for activeSection, $effect to set up/tear down the observer)",
+        "A single IntersectionObserver with rootMargin '-45% 0px -45% 0px' (or equivalent center-crossing threshold) drives activeSection; exactly one section is active at a time with no flicker during continuous scroll",
+        "Nav shows a home/logo item (acts as scroll-to-top / back-to-top) plus About, Software, Cybersecurity links; clicking a link smooth-scrolls to that section and updates location.hash without a full reload",
+        "Nav is transparent/borderless while within Hero and gains a background + border once scrolled past Hero (two-state behavior)",
+        "On mobile, nav collapses to a hamburger-triggered full-screen overlay menu (not a condensed bar)",
+        "Active nav item is indicated by both a color change and a non-color marker (e.g. bracket or underline), not color alone",
+        "All nav items are keyboard-focusable with visible focus-visible states",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Build Hero section with CRT boot-sequence and typed-text effect",
+      "description": "As a visitor, I want the Hero to open with a distinctive terminal boot animation before the name/title/CTAs resolve, per the site's WOW-factor design direction, so the first impression is memorable and on-theme.",
+      "acceptanceCriteria": [
+        "HeroSection.svelte reads content from data/hero.ts (bootLines, name, title, tagline, resumeUrl, githubUrl, linkedinUrl)",
+        "A brief (~600-900ms) simulated terminal boot sequence types out 2-3 lines before the final name/title/tagline appears, using $state for line/character progress driven by an $effect timer",
+        "Final hero text is present in the DOM immediately and readable by screen readers regardless of animation timing (not solely revealed via animation)",
+        "prefers-reduced-motion: reduce skips directly to the fully-typed final state with no animation delay",
+        "CTA row renders resume, GitHub, LinkedIn links (placeholder URLs) plus a 'View Projects' control that scrolls to #software",
+        "Hero content is fully visible without scrolling at 375x667 and 1440x900 viewports",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Build About section with narrative, currently-building line, and Experience list",
+      "description": "As a visitor, I want to read a short narrative about the site owner, what they're currently building, and their work experience, so I understand their background beyond the Hero tagline.",
+      "acceptanceCriteria": [
+        "AboutSection.svelte reads narrative paragraphs and currentlyBuilding from data/about.ts and renders them as body copy in the Inter font",
+        "A 'currently building' line is displayed in monospace styling (e.g. '$ currently building: ...')",
+        "ExperienceList.svelte renders about.experience as a compact timeline (role, org, date range) with 2 placeholder entries (Finback 670, InvitaHealth)",
+        "No portrait/avatar image is rendered or reserved as empty space (none exists yet)",
+        "Section reflows correctly from single-column (mobile) to any wider layout (desktop) with no overlap",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Build Software section project grid wired to data",
+      "description": "As a visitor, I want to see the owner's software projects as cards in a responsive grid, so I can scan their work at a glance.",
+      "acceptanceCriteria": [
+        "ProjectCard.svelte accepts a project: Project prop and renders thumbnail (first image), title, summary, tech-stack tags, year, and a distinct 'Live Demo' link/button when links.demo is present",
+        "SoftwareSection.svelte renders one ProjectCard per entry in data/projects.ts in array order, in a grid that reflows 1-up mobile / 2-up tablet / 3-up desktop",
+        "Adding a throwaway 3rd seed project to projects.ts requires no .svelte file changes to render correctly",
+        "Card hover state uses the design system's translate + growing-shadow 'lift' interaction, not a generic color-only hover",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Build accessible image lightbox with keyboard nav and touch swipe",
+      "description": "As a visitor, I want to click a project's thumbnail to preview its full image gallery without leaving the page, and navigate it with keyboard or touch, so previewing screenshots feels fast and doesn't require external links.",
+      "acceptanceCriteria": [
+        "Lightbox.svelte accepts images, activeIndex, onClose, onNavigate props; SoftwareSection.svelte owns a single activeProjectSlug/activeImageIndex $state controlling one shared lightbox instance (not one per card)",
+        "Clicking a project thumbnail opens the lightbox to that project's images; Escape closes it, ArrowLeft/ArrowRight navigate, on-screen prev/next controls also work",
+        "Touch/swipe gesture navigates images on touch devices in addition to buttons/keyboard",
+        "Focus is trapped inside the lightbox while open and restored to the triggering thumbnail on close",
+        "Background scroll is locked while open without introducing horizontal layout shift (scrollbar-width compensated)",
+        "Projects with images.length <= 1 hide the gallery-open affordance rather than opening a dead-control lightbox",
+        "All images have non-empty, meaningful alt text sourced from the data model",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Add build-time image optimization for project images",
+      "description": "As a developer, I need project images served as responsive, modern-format assets built at compile time, so the site stays fast without a runtime image service.",
+      "acceptanceCriteria": [
+        "@sveltejs/enhanced-img is installed and wired into the Vite config",
+        "Project thumbnail and lightbox images use enhanced-img (or its <enhanced:img> equivalent) producing responsive srcset/sizes with AVIF/WebP + fallback",
+        "All images except the first visible card's thumbnail use loading=\"lazy\"",
+        "Build succeeds with optimized image output present in build/",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Build Cybersecurity section cert cards with status states",
+      "description": "As a visitor, I want to see the owner's certifications with clear active/expiring-soon/in-progress status, so I can gauge their current credentials at a glance.",
+      "acceptanceCriteria": [
+        "CertCard.svelte accepts a cert: Certification prop and renders name, issuer, formatted date(s), a verify link when verifyUrl is present, and renders correctly when optional fields (logo, verifyUrl, expiryDate, credentialId) are absent",
+        "A cert with status 'active' and an expiryDate within 90 days renders a visually distinct 'expiring soon' badge (computed at render time, not stored), separate from plain 'active' and from 'in-progress' styling",
+        "CybersecuritySection.svelte renders one CertCard per entry in data/certs.ts's certifications array, visually distinct from the Software section's card treatment while using the same design tokens",
+        "Verify links open in a new tab with rel=\"noopener noreferrer\"",
+        "Adding a throwaway test cert to certs.ts requires no .svelte file changes to render correctly",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Build Accomplishments list and grouped Tools display",
+      "description": "As a visitor, I want to see the owner's CTF/competition accomplishments and their security tool proficiency grouped by category, so I understand their practical security experience beyond formal certs.",
+      "acceptanceCriteria": [
+        "Accomplishments.svelte accepts items: Accomplishment[] and renders them as a list/timeline distinct from the cert-card grid treatment",
+        "ToolsList.svelte accepts tools: SecurityTool[] and renders them as tag/pill chips grouped by their category field (e.g. a heading per category with its tools beneath)",
+        "Both components are rendered inside CybersecuritySection.svelte, sourced from data/certs.ts's accomplishments and securityTools arrays",
+        "Rendering with seed/placeholder data produces no broken layout for empty or single-item groups",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Build contact form and footer with placeholder submit backend",
+      "description": "As a visitor, I want a way to contact the site owner via a form, so that I don't need to already know their email. As the developer, I need the form's backend to be a placeholder today and a one-line config swap to Resend later.",
+      "acceptanceCriteria": [
+        "ContactForm.svelte holds $state for field values and submit status (idle/submitting/success/error), with all fields keyboard-operable and labeled",
+        "Submitting the form calls the endpoint defined in data/contact.ts (not hardcoded inline) and shows a success state without requiring a runtime server, consistent with the static adapter-static deploy target",
+        "Footer.svelte renders ContactForm plus the placeholder resume/GitHub/LinkedIn links from data/hero.ts",
+        "Swapping the endpoint value in data/contact.ts is the only change needed to point the form at a different backend",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Add scanline overlay and glitch-on-hover signature interactions",
+      "description": "As a visitor, I want the site to feel distinctively CRT/terminal-themed through subtle ambient motion and a glitch effect on interactive headings, so the first impression stands out from generic AI-portfolio aesthetics.",
+      "acceptanceCriteria": [
+        "ScanlineOverlay.svelte renders a fixed-position, pointer-events:none, aria-hidden, low-opacity repeating-gradient scanline texture with slow drift animation, layered above the base background",
+        "Section headings and nav items glitch (brief RGB-channel-split / character-jitter, ~150ms) on hover using --color-green-bright / --color-purple channel offsets",
+        "Neither effect uses blur, glow, gradients-as-fill, or backdrop-filter (glassmorphism) — verified by inspecting the applied CSS",
+        "Both effects are disabled under prefers-reduced-motion: reduce (scanline stops drifting or is hidden; glitch hover reduces to a plain color change)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Add scroll-reveal action and growth-accent motif across all sections",
+      "description": "As a visitor, I want section content to reveal smoothly as I scroll to it, with a small botanical motif accenting transitions, so scrolling through the page feels intentional rather than static.",
+      "acceptanceCriteria": [
+        "src/lib/actions/reveal.ts is a Svelte action wrapping an IntersectionObserver that adds an is-visible class (opacity/transform only, no layout-affecting properties) the first time an element crosses ~20% into the viewport, then unobserves it (one-shot, no re-trigger on scroll-up)",
+        "Grid items (project cards, cert cards) stagger reveal by ~60ms per item; standalone headings reveal individually with no stagger",
+        "A small recurring botanical accent (animated SVG or ASCII-style glyph) appears at least at section transitions",
+        "prefers-reduced-motion: reduce shows all reveal-target elements immediately with no animated transition",
+        "No cumulative layout shift is introduced by reveal animations (verified via DevTools CLS or Lighthouse)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Set up CI with typecheck/lint/build gate and deploy to default subdomain",
+      "description": "As a developer, I need automated CI that blocks broken code from merging and a working deploy pipeline to a live URL, so the site can ship reliably without manual steps.",
+      "acceptanceCriteria": [
+        "A GitHub Actions workflow runs typecheck, lint, and build on every pull request and fails the check if any step fails",
+        "A separate deploy step publishes the build/ output to the platform's default subdomain (GitHub Pages or Netlify, not yet the custom domain — DNS is handled separately by the owner) on push to main",
+        "The live default-subdomain URL serves the site correctly over HTTPS after a push to main",
+        "Lighthouse Performance/Accessibility/Best Practices scores on the live URL each meet or exceed 95",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Fill in placeholder-realistic content across all data files",
+      "description": "As a developer, I need every data file populated with fuller, plausible-looking content using the owner's real project/employer/cert names (CivSail, Nexus, Finback 670, InvitaHealth, CPTS) instead of minimal seed stubs, so the deployed site looks complete while every invented fact stays clearly marked for later replacement with the owner's real copy.",
+      "acceptanceCriteria": [
+        "data/projects.ts has two full entries: CivSail and Nexus, each with a plausible summary/description, a realistic techStack array, at least 2 placeholder images with meaningful alt text, a links.demo and links.repo placeholder URL, and a year",
+        "data/certs.ts certifications array has 2 entries with status 'active' and an expiryDate within 90 days (to exercise the 'expiring soon' badge) plus a 3rd entry named CPTS with status 'in-progress' and no expiryDate",
+        "data/certs.ts accomplishments array has at least 2 plausible CTF/competition-placement entries (title, description, date)",
+        "data/certs.ts securityTools array has entries spanning at least 3 categories (e.g. Offensive, Defensive, Forensics/GRC)",
+        "data/about.ts experience array has 2 entries: Finback 670 and InvitaHealth, each with a role, org, and a plausible startDate/endDate (or omitted endDate if treated as current)",
+        "Every invented (non-owner-confirmed) fact — dates, descriptions, placements, tool categorization — is marked with a PLACEHOLDER_COPY comment/sentinel so it is grep-able for later replacement",
+        "No empty states, Lorem ipsum, or broken layout results from the fuller data anywhere in the app",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
