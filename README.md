@@ -1,42 +1,37 @@
-# sv
+# caseynazelrod.com
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Single-page scroll portfolio for Casey Nazelrod — software developer & cybersecurity practitioner. Built with Svelte 5 + SvelteKit, prerendered to fully static HTML via `@sveltejs/adapter-static`, styled with Tailwind CSS.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-npx sv@0.16.4 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --no-download-check --install npm .
-```
+See `docs/` for the full set of design/implementation PRDs (design system, layout/nav, section specs, build plan) and `agents/` for the Ralph autonomous-build plan driving implementation story by story.
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Install dependencies, then start a dev server:
 
 ```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
+npm install
 npm run dev -- --open
 ```
 
 ## Building
 
-To create a production version of your app:
-
 ```sh
-npm run build
+npm run build      # produces a static build/ output
+npm run preview    # preview the production build locally
 ```
 
-You can preview the production build with `npm run preview`.
+## Quality checks
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```sh
+npm run check   # typecheck (svelte-check)
+npm run lint    # prettier --check + eslint
+npm run format  # prettier --write
+```
+
+## Scaffold
+
+This project was scaffolded with the Svelte CLI (`sv`). To recreate the initial scaffold configuration:
+
+```sh
+npx sv@0.16.4 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static" --no-download-check --install npm .
+```

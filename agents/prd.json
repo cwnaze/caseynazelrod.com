@@ -9,7 +9,7 @@
       "description": "As a developer, I need a working SvelteKit + TypeScript project scaffolded in this (currently empty) repo, configured for static prerendering and with baseline tooling in place, so all later work has a stable foundation.",
       "acceptanceCriteria": [
         "SvelteKit project initialized with TypeScript in the repo root",
-        "@sveltejs/adapter-static installed and configured in svelte.config.js; root layout/page sets export const prerender = true",
+        "@sveltejs/adapter-static installed and configured (in svelte.config.js, or inline via the sveltekit() Vite plugin if this SvelteKit version has no separate svelte.config.js); root layout sets export const prerender = true",
         "Tailwind CSS installed and wired into the Vite/SvelteKit build (a Tailwind utility class renders correctly on a placeholder page)",
         "ESLint + Prettier (with prettier-plugin-tailwindcss) configured; svelte-check available as the typecheck command",
         "npm run build produces a static build/ output",
