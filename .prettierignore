@@ -14,3 +14,4 @@ bun.lockb
 
 # Local editor/tool config (globally gitignored, not part of this repo's source)
 /.claude/
+/.rodney/

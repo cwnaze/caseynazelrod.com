@@ -28,3 +28,8 @@ body {
 	background-color: var(--color-base);
 	color: var(--color-text);
 }
+
+/* Keeps anchor-scrolled sections from landing underneath the fixed nav bar. */
+section[id] {
+	scroll-margin-top: 5rem;
+}
