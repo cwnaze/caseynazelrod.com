@@ -1,96 +1,188 @@
 <script lang="ts">
 	const PETAL_ANGLES = [0, 60, 120, 180, 240, 300];
-	const GOLDEN_ANGLE = 137.508;
-	const CANOPY_CENTER = { x: 162, y: 160 };
-	const CANOPY_RADIUS = { x: 128, y: 78 };
+	const VIEW_WIDTH = 340;
+	const VIEW_HEIGHT = 460;
+	const TRUNK_FORK = { x: 170, y: 285 };
+	// How close the pointer has to be (in the SVG's own coordinate units) before a leaf/blossom
+	// starts rustling.
+	const RUSTLE_RADIUS = 40;
 
-	// Deterministic phyllotaxis (sunflower-seed) scatter — not Math.random(), which would
-	// render different positions on the server vs. after hydration.
-	function bulbPositions(count: number) {
-		return Array.from({ length: count }, (_, i) => {
-			const angleDeg = i * GOLDEN_ANGLE + 15;
-			const angleRad = (angleDeg * Math.PI) / 180;
-			const frac = Math.sqrt((i + 0.5) / count);
-			return {
-				id: `bulb${i}`,
-				cx: Math.round(CANOPY_CENTER.x + Math.cos(angleRad) * frac * CANOPY_RADIUS.x),
-				cy: Math.round(CANOPY_CENTER.y + Math.sin(angleRad) * frac * CANOPY_RADIUS.y),
-				r: 14 + (i % 4) * 3
-			};
-		});
-	}
-
-	function blossomPositions(count: number) {
-		return Array.from({ length: count }, (_, i) => {
-			const angleDeg = i * GOLDEN_ANGLE + 40;
-			const angleRad = (angleDeg * Math.PI) / 180;
-			const frac = 0.3 + (i / count) * 0.55;
-			return {
-				id: `b${i}`,
-				cx: Math.round(CANOPY_CENTER.x + Math.cos(angleRad) * frac * CANOPY_RADIUS.x),
-				cy: Math.round(CANOPY_CENTER.y + Math.sin(angleRad) * frac * CANOPY_RADIUS.y),
-				scale: 0.32 + (i % 3) * 0.05
-			};
-		});
-	}
-
-	const BULBS = bulbPositions(11);
-	const BLOSSOMS = blossomPositions(6);
-
-	// Canopy "body" — a spread of distinct, irregularly-placed lobes (not concentric circles
-	// around one point) so the silhouette reads as a wide, lumpy canopy rather than one uniform
-	// blob. Bulbs and blossoms render on top of this for texture and hover interactivity.
-	const CANOPY_LOBES = [
-		{ cx: 165, cy: 160, r: 65 },
-		{ cx: 70, cy: 170, r: 40 },
-		{ cx: 110, cy: 110, r: 46 },
-		{ cx: 165, cy: 90, r: 44 },
-		{ cx: 220, cy: 110, r: 46 },
-		{ cx: 255, cy: 170, r: 40 },
-		{ cx: 90, cy: 210, r: 38 },
-		{ cx: 150, cy: 225, r: 42 },
-		{ cx: 210, cy: 210, r: 38 }
+	// Every branch tip / bend that grows a cluster of leaves — matches the strokes drawn below,
+	// so foliage always reads as attached to an actual branch rather than floating nearby.
+	const CLUSTER_POINTS = [
+		{ x: 95, y: 205, count: 11 },
+		{ x: 55, y: 150, count: 13 },
+		{ x: 112, y: 138, count: 12 },
+		{ x: 175, y: 150, count: 10 },
+		{ x: 150, y: 88, count: 13 },
+		{ x: 208, y: 108, count: 12 },
+		{ x: 250, y: 205, count: 11 },
+		{ x: 292, y: 150, count: 13 },
+		{ x: 236, y: 138, count: 12 }
 	];
+	// A couple of clusters also get a small purple blossom nested among their leaves.
+	const BLOSSOM_CLUSTER_INDICES = [1, 4, 7];
+
+	function angleFromTrunk(x: number, y: number) {
+		return (Math.atan2(y - TRUNK_FORK.y, x - TRUNK_FORK.x) * 180) / Math.PI;
+	}
+
+	// Leaves fan out from the cluster's own point, within a small radius, at an angle centered
+	// on "away from the trunk" — deterministic (index-based), not Math.random(), so server and
+	// client render identically.
+	function buildLeaves() {
+		const leaves: { id: string; attachX: number; attachY: number; angle: number }[] = [];
+		CLUSTER_POINTS.forEach((cluster, ci) => {
+			const baseAngle = angleFromTrunk(cluster.x, cluster.y);
+			for (let i = 0; i < cluster.count; i++) {
+				const spreadFrac = cluster.count === 1 ? 0.5 : i / (cluster.count - 1);
+				const leafAngle = baseAngle + (spreadFrac - 0.5) * 150;
+				const radius = 6 + ((i * 5) % 16);
+				const rad = (leafAngle * Math.PI) / 180;
+				leaves.push({
+					id: `c${ci}-l${i}`,
+					attachX: Math.round(cluster.x + Math.cos(rad) * radius),
+					attachY: Math.round(cluster.y + Math.sin(rad) * radius),
+					angle: Math.round(leafAngle)
+				});
+			}
+		});
+		return leaves;
+	}
+
+	function buildBlossoms() {
+		return BLOSSOM_CLUSTER_INDICES.map((ci, i) => {
+			const cluster = CLUSTER_POINTS[ci];
+			return { id: `blossom-${ci}`, cx: cluster.x, cy: cluster.y, scale: 0.34 + (i % 2) * 0.05 };
+		});
+	}
+
+	const LEAVES = buildLeaves();
+	const BLOSSOMS = buildBlossoms();
+
+	let svgEl: SVGSVGElement | undefined = $state();
+	let mouseX = $state(-9999);
+	let mouseY = $state(-9999);
+	let rafPending = false;
+
+	// $derived (not $effect) so this is also safely computed during SSR — the typeof guard
+	// keeps it false on the server, where window doesn't exist.
+	const reduced = $derived(
+		typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+	);
+
+	function updateMouse(clientX: number, clientY: number) {
+		if (!svgEl) return;
+		const rect = svgEl.getBoundingClientRect();
+		mouseX = ((clientX - rect.left) / rect.width) * VIEW_WIDTH;
+		mouseY = ((clientY - rect.top) / rect.height) * VIEW_HEIGHT;
+	}
+
+	function handlePointerMove(e: PointerEvent) {
+		if (rafPending) return;
+		rafPending = true;
+		const { clientX, clientY } = e;
+		requestAnimationFrame(() => {
+			rafPending = false;
+			updateMouse(clientX, clientY);
+		});
+	}
+
+	function handlePointerLeave() {
+		mouseX = -9999;
+		mouseY = -9999;
+	}
+
+	function isNear(x: number, y: number) {
+		const dx = x - mouseX;
+		const dy = y - mouseY;
+		return dx * dx + dy * dy < RUSTLE_RADIUS * RUSTLE_RADIUS;
+	}
 </script>
 
-<!-- Purely decorative, fully-drawn tree to the right of Hero's text — unlike ScrollVine this
-	 isn't scroll-tied (that's the page-wide scrollbar-vine's job now), it's static apart from a
-	 slow, continuous idle sway (see .hero-bloom in layout.css). Hovering a green foliage bulb
-	 rustles it (a scale wobble, since a plain rotation wouldn't read on a circle); hovering a
-	 blossom rustles its petals — via .hero-bulb/.hero-petal keyframes in layout.css. Bulb/blossom
-	 positions are a deterministic phyllotaxis scatter (see bulbPositions/blossomPositions above),
-	 not random, so server and client render identically. -->
+<!-- Purely decorative tree to the right of Hero's text, styled after a flat-design tree
+	 silhouette reference — one solid-color trunk/branch shape with wood-grain detail lines,
+	 leaves clustered tightly at each branch tip/bend (never floating apart from the branch
+	 structure), and a couple of purple blossoms nested among the leaves. It's static apart from
+	 a slow idle sway (see .hero-bloom below) — but leaves/blossoms within RUSTLE_RADIUS of the
+	 pointer rustle continuously as it moves nearby (see isNear/.is-near), not on a per-element
+	 :hover. Disabled entirely under prefers-reduced-motion. -->
 <div aria-hidden="true" class="hero-bloom hidden lg:block">
-	<svg width="280" height="380" viewBox="0 0 340 460" fill="none">
+	<svg
+		bind:this={svgEl}
+		width="260"
+		height="350"
+		viewBox="0 0 {VIEW_WIDTH} {VIEW_HEIGHT}"
+		fill="none"
+		role="presentation"
+		onpointermove={reduced ? undefined : handlePointerMove}
+		onpointerleave={reduced ? undefined : handlePointerLeave}
+	>
+		<!-- Trunk, primary/secondary branches, and root flare — all the same solid bark color and
+			 no outline, so overlapping strokes read as one continuous silhouette. -->
+		<path d="M170 435 V 285" stroke="var(--color-bark)" stroke-width="30" stroke-linecap="round" />
 		<path
-			d="M140 430 C 138 390 142 350 142 320 C 143 290 146 260 150 225 L 174 225 C 178 260 181 290 182 320 C 182 350 186 390 184 430 Z"
-			fill="var(--color-bark)"
+			d="M170 430 L 122 440 M170 430 L 218 440"
+			stroke="var(--color-bark)"
+			stroke-width="14"
+			stroke-linecap="round"
 		/>
 		<path
-			d="M154 415 C 152 385 156 355 154 325 C 153 300 155 270 158 235"
+			d="M170 285 L 95 205 M170 285 L 175 150 M170 285 L 250 205"
+			stroke="var(--color-bark)"
+			stroke-width="18"
+			stroke-linecap="round"
+		/>
+		<path
+			d="M95 205 L 55 150 M95 205 L 112 138"
+			stroke="var(--color-bark)"
+			stroke-width="10"
+			stroke-linecap="round"
+		/>
+		<path
+			d="M175 150 L 150 88 M175 150 L 208 108"
+			stroke="var(--color-bark)"
+			stroke-width="9"
+			stroke-linecap="round"
+		/>
+		<path
+			d="M250 205 L 292 150 M250 205 L 236 138"
+			stroke="var(--color-bark)"
+			stroke-width="10"
+			stroke-linecap="round"
+		/>
+
+		<!-- Wood-grain detail: thin lighter lines running with the trunk, plus a knot. -->
+		<path
+			d="M158 425 C 156 390 160 355 158 320 C 157 305 159 292 161 285"
 			stroke="var(--color-bark-bright)"
 			stroke-width="2"
 			stroke-linecap="round"
 		/>
 		<path
-			d="M170 410 C 172 380 169 350 171 322 C 172 298 170 268 167 238"
+			d="M182 420 C 184 385 180 350 182 318 C 183 302 181 292 179 285"
 			stroke="var(--color-bark-bright)"
 			stroke-width="2"
 			stroke-linecap="round"
 		/>
+		<ellipse cx="168" cy="365" rx="6" ry="9" stroke="var(--color-bark-bright)" stroke-width="1.5" />
 
-		{#each CANOPY_LOBES as lobe (lobe.cx + '-' + lobe.cy)}
-			<circle cx={lobe.cx} cy={lobe.cy} r={lobe.r} fill="var(--color-green)" />
-		{/each}
-
-		{#each BULBS as bulb (bulb.id)}
-			<g class="hero-bulb">
-				<circle cx={bulb.cx} cy={bulb.cy} r={bulb.r} fill="var(--color-green-bright)" />
+		{#each LEAVES as leaf (leaf.id)}
+			<g class="hero-leaf {isNear(leaf.attachX, leaf.attachY) ? 'is-near' : ''}">
+				<ellipse
+					cx={leaf.attachX + 11}
+					cy={leaf.attachY}
+					rx="11"
+					ry="4"
+					fill="var(--color-green-bright)"
+					style="--base-angle: {leaf.angle}deg; transform-origin: {leaf.attachX}px {leaf.attachY}px;
+						transform: rotate(var(--base-angle));"
+				/>
 			</g>
 		{/each}
 
 		{#each BLOSSOMS as blossom (blossom.id)}
-			<g class="hero-flower">
+			<g class="hero-flower {isNear(blossom.cx, blossom.cy) ? 'is-near' : ''}">
 				{#each PETAL_ANGLES as angle (angle)}
 					<ellipse
 						class="hero-petal"

@@ -185,12 +185,15 @@ section[id] {
 	}
 }
 
-/* Hover reactions on the Hero bloom — rustling, not a rigid scale/spin of the whole shape.
-   Each petal rotates from its own --base-angle (set inline per element in HeroBloom.svelte),
-   pivoting around the point where it actually meets the blossom's center (transform-origin,
-   also set inline), so the rustle reads as that specific petal shaking in place rather than
-   the whole blossom swinging around an unrelated center. */
-.hero-petal {
+/* Proximity reactions on the Hero tree — rustling, not a rigid scale/spin of the whole shape.
+   HeroBloom.svelte tracks pointer position and toggles .is-near on whichever leaves/blossoms
+   fall within RUSTLE_RADIUS of it (not :hover, so the effect isn't limited to one element at a
+   time and follows the cursor continuously). Each petal/leaf rotates from its own
+   --base-angle (set inline per element), pivoting around the point where it actually meets the
+   branch/blossom center (transform-origin, also set inline), so the rustle reads as that
+   specific piece shaking in place. */
+.hero-petal,
+.hero-leaf ellipse {
 	transform-box: view-box;
 }
 
@@ -213,56 +216,49 @@ section[id] {
 	}
 }
 
-.hero-flower:hover .hero-petal {
+.hero-flower.is-near .hero-petal {
 	animation: hero-petal-rustle 500ms ease-in-out infinite;
 }
 
-.hero-flower:hover .hero-petal:nth-child(2) {
+.hero-flower.is-near .hero-petal:nth-child(2) {
 	animation-delay: 60ms;
 }
-.hero-flower:hover .hero-petal:nth-child(3) {
+.hero-flower.is-near .hero-petal:nth-child(3) {
 	animation-delay: 120ms;
 }
-.hero-flower:hover .hero-petal:nth-child(4) {
+.hero-flower.is-near .hero-petal:nth-child(4) {
 	animation-delay: 180ms;
 }
-.hero-flower:hover .hero-petal:nth-child(5) {
+.hero-flower.is-near .hero-petal:nth-child(5) {
 	animation-delay: 240ms;
 }
-.hero-flower:hover .hero-petal:nth-child(6) {
+.hero-flower.is-near .hero-petal:nth-child(6) {
 	animation-delay: 300ms;
 }
 
-/* A plain rotation wouldn't read visually on a circle, so the foliage bulbs "rustle" via a
-   squash-and-stretch wobble instead. */
-.hero-bulb {
-	transform-box: fill-box;
-	transform-origin: center;
-}
-
-@keyframes hero-bulb-rustle {
+@keyframes hero-leaf-rustle {
 	0%,
 	100% {
-		transform: scale(1, 1);
+		transform: rotate(var(--base-angle));
 	}
 	25% {
-		transform: scale(1.1, 0.9);
+		transform: rotate(calc(var(--base-angle) - 12deg));
 	}
 	50% {
-		transform: scale(0.92, 1.08);
+		transform: rotate(calc(var(--base-angle) + 9deg));
 	}
 	75% {
-		transform: scale(1.06, 0.94);
+		transform: rotate(calc(var(--base-angle) - 7deg));
 	}
 }
 
-.hero-bulb:hover {
-	animation: hero-bulb-rustle 450ms ease-in-out infinite;
+.hero-leaf.is-near ellipse {
+	animation: hero-leaf-rustle 450ms ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.hero-flower:hover .hero-petal,
-	.hero-bulb:hover {
+	.hero-flower.is-near .hero-petal,
+	.hero-leaf.is-near ellipse {
 		animation: none;
 	}
 }
