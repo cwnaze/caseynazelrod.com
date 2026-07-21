@@ -11,8 +11,9 @@
 		<li class="text-green">Green: --color-green</li>
 		<li class="text-green-bright">Bright green: --color-green-bright</li>
 		<li class="text-purple">Purple: --color-purple</li>
-		<li class="text-purple-deep">
-			Purple deep (border/shadow only, not text at small sizes): --color-purple-deep
+		<li class="border-2 border-purple-deep pl-2">
+			Purple deep (border/shadow only, never as text color — see contrast audit in
+			docs/01-design-system.md): --color-purple-deep
 		</li>
 		<li class="text-text-muted">Muted text: --color-text-muted</li>
 		<li class="bg-surface p-2">Surface background: --color-surface</li>
