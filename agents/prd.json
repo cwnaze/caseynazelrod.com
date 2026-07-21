@@ -253,7 +253,7 @@
       "title": "Add scroll-reveal action and growth-accent motif across all sections",
       "description": "As a visitor, I want section content to reveal smoothly as I scroll to it, with a small botanical motif accenting transitions, so scrolling through the page feels intentional rather than static.",
       "acceptanceCriteria": [
-        "src/lib/actions/reveal.ts is a Svelte action wrapping an IntersectionObserver that adds an is-visible class (opacity/transform only, no layout-affecting properties) the first time an element crosses ~20% into the viewport, then unobserves it (one-shot, no re-trigger on scroll-up)",
+        "src/lib/actions/reveal.ts is a Svelte action wrapping an IntersectionObserver that adds an is-visible class (opacity/transform only, no layout-affecting properties) whenever an element crosses ~20% into the viewport, and removes it when the element leaves — repeatable (re-triggers every time the element re-enters view, per owner feedback superseding the original one-shot plan), not a one-time trigger",
         "Grid items (project cards, cert cards) stagger reveal by ~60ms per item; standalone headings reveal individually with no stagger",
         "A small recurring botanical accent (animated SVG or ASCII-style glyph) appears at least at section transitions",
         "prefers-reduced-motion: reduce shows all reveal-target elements immediately with no animated transition",
@@ -262,8 +262,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: reveal elements start with class='reveal' (opacity:0) before scrolling into view, gain 'is-visible' (opacity:1) once ~20% intersecting. Owner feedback after initial review: wanted the reveal to replay every time an element re-enters view rather than only once per page load — updated reveal.ts to remove 'is-visible' on exit (IntersectionObserver stays attached, never unobserves) instead of unobserving after the first trigger; re-verified scroll-away-then-back re-adds 'is-visible' correctly. Staggered grid items (ProjectCard/CertCard wrapped in use:reveal={{delayMs: i*60}} divs) both eventually reveal correctly. GrowthAccent (4 instances, one per section transition) confirmed present, undrawn (stroke-dashoffset:60px) before reveal and drawn (0px) after, no filter/blur. Both reduced-motion overrides (.reveal, .growth-accent path) confirmed in compiled build CSS. Deliberately did NOT apply the generic reveal action to Hero's heading, since it already has its own dedicated boot-sequence-driven opacity transition — layering the generic scroll-reveal on top would create two competing opacity systems on the same element."
     },
     {
       "id": "US-017",

@@ -72,3 +72,45 @@ section[id] {
 		color: var(--color-green-bright);
 	}
 }
+
+/* Scroll-reveal, driven by src/lib/actions/reveal.ts. Opacity/transform only — never a
+   layout-affecting property — so revealing an element never shifts anything else (no CLS). */
+.reveal {
+	opacity: 0;
+	transform: translateY(12px);
+	transition:
+		opacity 400ms ease-out,
+		transform 400ms ease-out;
+}
+
+.reveal.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
+/* Growth-accent motif (botanical signature interaction) — a small line-drawn sprout that
+   "grows" in via stroke-dashoffset once its wrapping .reveal element becomes visible. */
+.growth-accent path {
+	stroke-dasharray: 60;
+	stroke-dashoffset: 60;
+	transition: stroke-dashoffset 800ms ease-out;
+}
+
+.reveal.is-visible .growth-accent path {
+	stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.growth-accent path {
+		transition: none;
+		stroke-dashoffset: 0;
+	}
+}

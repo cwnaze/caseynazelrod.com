@@ -26,6 +26,7 @@ Enumerate every Svelte component in the site, its props/state, and which data it
 | `ContactForm.svelte` | `src/lib/components/ContactForm.svelte` | — | `$state` for field values + submit status (idle/submitting/success/error) | posts to a configurable placeholder endpoint (`data/contact.ts` config: submit URL), swappable for Resend later | 00, 08 |
 | `Footer.svelte` | `src/lib/components/Footer.svelte` | — | none | renders `ContactForm`, placeholder resume/GitHub/LinkedIn links from `data/hero.ts` | 02 |
 | `ScanlineOverlay.svelte` | `src/lib/components/ScanlineOverlay.svelte` | — | none | none (pure decorative CSS, `aria-hidden`) | 01 |
+| `GrowthAccent.svelte` | `src/lib/components/GrowthAccent.svelte` | — | none | none (pure decorative SVG, `aria-hidden`, `use:reveal`) | 01 |
 
 ## Shared/Utility Modules (non-component)
 | Module | Path (proposed) | Purpose |
