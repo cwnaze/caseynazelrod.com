@@ -109,3 +109,11 @@
   - Any element that's only visually hidden via `opacity-0`/`visibility` classes but still rendered (not `{#if}`-gated) needs `inert` (or `tabindex="-1"` + `aria-hidden` on each focusable child) while hidden, or keyboard users can tab into invisible controls. This applies to any future fade-in reveal, not just Hero.
   - When timing a short animation window (<1s) with `rodney`, issue the state-check command immediately after the triggering action (e.g. `reload` then the very next command) rather than after other commands — CLI round-trip latency alone can exceed the window.
 ---
+
+## 2026-07-21 - US-008
+- Added `src/lib/components/ExperienceList.svelte` (`items: ExperienceEntry[]` prop, formats each entry's `startDate`/`endDate` ISO strings into a `Mon YYYY – Mon YYYY` / `Mon YYYY – Present` range via `Date.UTC` + `toLocaleDateString`) and rewrote `AboutSection.svelte` to a two-column grid (narrative + "currently building" line on the left, `ExperienceList` on the right at `md:`+, stacked single-column below).
+- `formatDate` parses the `YYYY-MM` prefix of the ISO date string directly (`isoDate.split('-')`) and constructs the date with `Date.UTC` rather than `new Date(isoDate)`, to avoid local-timezone-shift bugs where a date like `2025-06-01` could render as May in timezones behind UTC.
+- Verified with rodney: two-column layout at desktop reflows to single-column at 375px with no overlap; both Experience entries render with correct formatted date ranges including "Present" for the open-ended InvitaHealth entry; no avatar image or reserved space for one, per `docs/03-hero-about.md`'s resolved decision.
+- **Learnings for future iterations:**
+  - Constructing dates from `YYYY-MM`-style strings: always use `Date.UTC(year, month - 1)` + a `timeZone: 'UTC'` option on `toLocaleDateString`, never bare `new Date(isoDateString)`, to avoid off-by-one-month timezone bugs. This will matter again for any other date-formatted content (cert issue/expiry dates in US-012).
+---

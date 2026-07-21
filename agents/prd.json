@@ -130,8 +130,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: two-column layout (narrative+currently-building / Experience) at desktop, reflows to single-column stacked at 375px with no overlap; both Experience entries render with formatted Mon YYYY date ranges (including 'Present' for the open-ended InvitaHealth entry); no avatar/image present or space reserved for one."
     },
     {
       "id": "US-009",
