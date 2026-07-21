@@ -77,3 +77,14 @@
   - See the corrected rodney viewport/state-persistence notes above (US-005 entry) — read those before writing browser-verification steps for later responsive stories (e.g. US-010's touch/swipe lightbox).
   - `Nav.svelte` is the only component with 3 concurrent `$effect`s so far — each does exactly one thing (observer, scroll listener, body-overflow lock) with its own cleanup; don't merge them into one effect, since Svelte reruns an entire `$effect` (including re-subscribing) whenever any value it reads changes, and these three have independent triggers.
 ---
+
+## 2026-07-21 - US-006 (Copilot review fixes)
+- `scrollToSection('hero')` now pushes `location.pathname + location.search` instead of `'#'`, so returning to Hero actually clears the hash instead of leaving a trailing `#`.
+- The mobile scroll-lock `$effect` now captures `document.body.style.overflow`'s previous value before setting `'hidden'`, and restores that captured value (not always `''`) in its cleanup — verified by manually setting `body.style.overflow = 'scroll'` before opening/closing the mobile menu and confirming it's restored, not wiped.
+- Added `motion-reduce:transition-none` to the nav's `transition-colors` class so the docked/undocked color transition is instant under `prefers-reduced-motion: reduce`.
+- Active nav links now get `aria-current="page"` and render their `> ` marker inside an `aria-hidden="true"` span (spacing via a `mr-1` margin, not a literal space character, since Svelte trims trailing whitespace in text nodes) instead of prepending `> ` to the link's own text — verified via `rodney ax-find --name "Software"` that the computed accessible name is exactly `"Software"`, not `"> Software"`.
+- **Learnings for future iterations:**
+  - Don't put a marker character + trailing space directly in template text when you need that space preserved (e.g. `<span>{'> '}</span>`) — Svelte's compiler trims it, and `svelte/no-useless-mustaches` also flags a mustache wrapping a plain string literal. Use CSS spacing (margin/padding) on the marker element instead.
+  - For any future non-color state indicator (e.g. cert "expiring soon" badges in US-012), use `aria-current`/`aria-selected`/similar plus an `aria-hidden` decorative marker — don't let a visual-only prefix/suffix leak into the accessible name.
+  - `rodney ax-find --name "<text>" --json` is the right tool to confirm computed accessible names, not `innerText`/`textContent` (which include `aria-hidden` content that screen readers won't announce).
+---

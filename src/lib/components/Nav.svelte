@@ -20,7 +20,8 @@
 		const el = document.getElementById(id);
 		if (!el) return;
 		el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-		history.pushState(null, '', id === 'hero' ? '#' : `#${id}`);
+		const url = id === 'hero' ? location.pathname + location.search : `#${id}`;
+		history.pushState(null, '', url);
 		mobileMenuOpen = false;
 	}
 
@@ -55,15 +56,17 @@
 	});
 
 	$effect(() => {
-		document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+		if (!mobileMenuOpen) return;
+		const previousOverflow = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
 		return () => {
-			document.body.style.overflow = '';
+			document.body.style.overflow = previousOverflow;
 		};
 	});
 </script>
 
 <nav
-	class="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-4 transition-colors duration-200 {dockedNav
+	class="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-4 transition-colors duration-200 motion-reduce:transition-none {dockedNav
 		? 'border-b border-green bg-surface'
 		: 'border-b border-transparent bg-transparent'}"
 >
@@ -80,6 +83,7 @@
 			<li>
 				<a
 					href="#{link.id}"
+					aria-current={activeSection === link.id ? 'page' : undefined}
 					class="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
 					link.id
 						? 'text-green-bright'
@@ -89,7 +93,8 @@
 						scrollToSection(link.id);
 					}}
 				>
-					{activeSection === link.id ? `> ${link.label}` : link.label}
+					{#if activeSection === link.id}<span aria-hidden="true" class="mr-1">&gt;</span
+						>{/if}{link.label}
 				</a>
 			</li>
 		{/each}
@@ -114,6 +119,7 @@
 		{#each LINKS as link (link.id)}
 			<a
 				href="#{link.id}"
+				aria-current={activeSection === link.id ? 'page' : undefined}
 				class="font-mono text-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
 				link.id
 					? 'text-green-bright'
@@ -123,7 +129,8 @@
 					scrollToSection(link.id);
 				}}
 			>
-				{activeSection === link.id ? `> ${link.label}` : link.label}
+				{#if activeSection === link.id}<span aria-hidden="true" class="mr-1">&gt;</span
+					>{/if}{link.label}
 			</a>
 		{/each}
 	</div>
