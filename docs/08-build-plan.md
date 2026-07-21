@@ -64,9 +64,11 @@ Sequence implementation into independently reviewable phases, from an empty repo
 - **Acceptance:** No `PLACEHOLDER_COPY` markers remain anywhere in the deployed build.
 
 ### Phase 11 — Deploy
-- Deploy to the platform's default subdomain first (GitHub Pages or Netlify — per `00-overview.md`, custom domain DNS is the owner's responsibility later).
-- Set up CI (GitHub Actions) running typecheck, lint, and build as a required check on every PR, with a separate deploy step publishing `build/` on push to `main`.
-- **Acceptance:** Production URL serves the site correctly over HTTPS; Lighthouse scores from `00-overview.md`'s success criteria are met on the live URL, not just locally; PRs are blocked from merging if typecheck/lint/build fail.
+- Deploy to the platform's default subdomain first (per `00-overview.md`, custom domain DNS is the owner's responsibility later).
+- Set up CI (GitHub Actions) running typecheck, lint, and build as a required check on every PR.
+- **Implemented (US-017):** `.github/workflows/ci.yml` runs `npm run check`/`lint`/`build` on every PR and on push to `main`.
+- **Resolved (superseding an earlier GitHub Pages deploy-workflow attempt):** owner is hosting on **Vercel** directly via its own dashboard/Git integration, not a repo-side GitHub Actions deploy step — Vercel builds and deploys on its own infrastructure whenever `main` (or a PR) is pushed, with no `BASE_PATH`/subpath handling needed since Vercel serves from the domain root. There is no `.github/workflows/deploy.yml` in this repo; deployment is entirely outside this repo's CI.
+- **Acceptance:** Production URL serves the site correctly over HTTPS; Lighthouse scores from `00-overview.md`'s success criteria are met on the live URL, not just locally; PRs are blocked from merging if typecheck/lint/build fail. The live-URL and Lighthouse checks happen on Vercel's own deployment once the owner connects the repo there — not something this repo's CI or a coding session can verify directly.
 
 ## Ralph Integration
 - `agents/prd.json` decomposes Phases 1–11 into individually-sized user stories (see file for exact breakdown — several phases split into 2+ stories where a phase is too large for one agent iteration, e.g. Software section splits into card+data wiring, lightbox, and image-optimization stories).
