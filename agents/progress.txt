@@ -185,3 +185,9 @@
   - When a Vite/Svelte ecosystem package's public API doesn't fit a dynamic/data-driven use case (like `<enhanced:img>` expecting static imports), check whether the *underlying* general-purpose plugin it wraps (here, `vite-imagetools`) can be driven directly via its own query-string convention — reading the wrapper's own source/plugin registration (not just its README) is often the fastest way to find this out.
   - Sandboxed/restricted environments may block `npm approve-scripts` (or similar) as a security-sensitive action requiring explicit user authorization — check whether the dependency actually needs its postinstall script before asking the user (e.g. try requiring/loading it) rather than assuming a blocked command means the feature is unusable.
 ---
+
+## 2026-07-21 - US-011 (self-review fix, Copilot unavailable again)
+- Copilot review was unavailable again (quota limit). Manual self-review caught: `src/lib/images.ts` imports `type { Picture }` from `imagetools-core`, which was only a *transitive* dependency (`@sveltejs/enhanced-img` → `vite-imagetools` → `imagetools-core`) never listed in `package.json`. It worked today because npm happened to hoist it to top-level `node_modules`, but a future lockfile regeneration or a version bump in `vite-imagetools` changing its own dependency tree could silently break the import with no warning until the next `npm ci`/`npm install`. Fixed by running `npm install -D imagetools-core@9.1.0` (matching the version already resolved) to make it an explicit, pinned devDependency.
+- **Learnings for future iterations:**
+  - When importing types (or anything) from a package not listed in `package.json`, check `npm ls <package>` to see if it's transitive-only — if so, add it as an explicit dependency at the version already resolved, rather than relying on hoisting to keep working.
+---
