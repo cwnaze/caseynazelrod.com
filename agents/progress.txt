@@ -1,3 +1,20 @@
 ## Codebase Patterns
+- Scaffolded via `npx sv create . --template minimal --types ts --no-dir-check --no-download-check --install npm --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:static"` — the `sv` CLI's non-interactive mode requires every multiselect add-on option to be explicitly set (e.g. `tailwindcss="plugins:none"`) or it still prompts.
+- This SvelteKit/Vite version has no separate `svelte.config.js` — the adapter and Svelte compiler options are configured inline in `vite.config.ts` via the `sveltekit({ adapter: adapter(), compilerOptions: {...} })` plugin call.
+- Static prerendering is enabled via `src/routes/+layout.ts` exporting `export const prerender = true;` (applies to the whole route tree since this is a single-page app).
+- Tailwind CSS v4 is wired via the `@tailwindcss/vite` plugin (not a `tailwind.config.js` + PostCSS pipeline) — theme customization for docs/01-design-system.md's tokens should go through Tailwind v4's CSS-based `@theme` config, not a `tailwind.config.ts` `theme.extend` block (that's the v3 pattern the PRD assumed; confirm the v4 equivalent when doing US-002).
+- `npm run check` = typecheck (`svelte-kit sync && svelte-check`), `npm run lint` = `prettier --check . && eslint .`, `npm run build` = `vite build` (outputs static site to `build/`).
+- `.prettierignore` excludes `/docs/`, `/agents/`, and `/.claude/` — these are hand-authored project docs/agent files and local tool config, not app source; Prettier's default file walk would otherwise reformat and reflow the markdown/JSON prose there.
 
 ## Progress Log
+
+## 2026-07-21 - US-001
+- Scaffolded SvelteKit + TypeScript project in the repo root (previously only `docs/` and `agents/` existed) with `@sveltejs/adapter-static`, Tailwind CSS v4, ESLint, and Prettier.
+- Added `src/routes/+layout.ts` to set `prerender = true` for static generation (not created by the scaffold by default).
+- Added a `text-3xl font-bold` Tailwind utility to the placeholder `+page.svelte` heading to verify Tailwind is actually compiled into the build output (confirmed present in `build/_app/immutable/assets/*.css`).
+- Added `/docs/`, `/agents/`, `/.claude/` to `.prettierignore` so `npm run lint` doesn't try to reformat hand-authored markdown/JSON/local config.
+- Verified: `npm run check` (0 errors), `npm run lint` (clean), `npm run build` (static `build/` output produced, Tailwind class confirmed compiled).
+- **Learnings for future iterations:**
+  - No `svelte.config.js` exists in this project — adapter/compiler config lives in `vite.config.ts`. Don't create a `svelte.config.js` expecting it to be read.
+  - Tailwind v4's `@tailwindcss/vite` plugin means design tokens (US-002) should be defined via CSS `@theme` in the global stylesheet, not `tailwind.config.ts` — re-check `docs/01-design-system.md`'s Tailwind config snippet against actual v4 syntax before implementing US-002.
+---

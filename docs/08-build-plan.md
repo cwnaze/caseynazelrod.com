@@ -13,7 +13,7 @@ Sequence implementation into independently reviewable phases, from an empty repo
 
 ### Phase 1 — Scaffold
 - Initialize SvelteKit project (`npx sv create`) with TypeScript, in this repo (currently empty aside from `.git`).
-- Install and configure `@sveltejs/adapter-static`; confirm `svelte.config.js` sets `adapter: adapter-static` and the root `+layout.js`/`+page.js` sets `export const prerender = true`.
+- Install and configure `@sveltejs/adapter-static`; confirm the adapter is wired up (in `svelte.config.js`, or inline via the `sveltekit()` Vite plugin depending on the scaffolded SvelteKit version) and the root `+layout.ts` sets `export const prerender = true`.
 - Install and configure Tailwind CSS (`tailwindcss`, `@tailwindcss/vite` or the SvelteKit-recommended integration) alongside ESLint, Prettier (with `prettier-plugin-tailwindcss` for class sorting), and `svelte-check` for typecheck — standard, unopinionated defaults since this is a fresh repo.
 - **Acceptance:** `npm run build` produces a static `build/` output with a placeholder page using at least one Tailwind utility class; `npm run check` (typecheck) and `npm run lint` pass.
 

@@ -1,0 +1,16 @@
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+bun.lockb
+
+# Miscellaneous
+/static/
+
+# Hand-authored project docs/agent files — not app source, don't reformat
+/docs/
+/agents/
+
+# Local editor/tool config (globally gitignored, not part of this repo's source)
+/.claude/
