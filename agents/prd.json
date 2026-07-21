@@ -147,7 +147,7 @@
       ],
       "priority": 9,
       "passes": true,
-      "notes": "Verified with rodney: 3-up grid at 1440px (added/removed a throwaway 3rd project to confirm no component changes needed, including Live Demo/Repo links appearing correctly when links are present); compiled CSS confirms sm:grid-cols-2 at >=640px and lg:grid-cols-3 at >=1024px (grid-cols-1 base). Tablet/mobile live-scroll screenshots were unreliable due to a known rodney viewport-emulation quirk (documented in progress.txt) — verified via compiled-CSS breakpoint inspection instead."
+      "notes": "Verified with rodney: 3-up grid at 1440px (added/removed a throwaway 3rd project to confirm no component changes needed, including Live Demo/Repo links appearing correctly when links are present); compiled CSS confirms sm:grid-cols-2 at >=640px and lg:grid-cols-3 at >=1024px (grid-cols-1 base). Tablet/mobile live-scroll screenshots were unreliable due to a known rodney viewport-emulation quirk (documented in progress.txt) — verified via compiled-CSS breakpoint inspection instead. Copilot review was unavailable (quota limit) on this PR; manual self-review caught that every image had loading=\"lazy\" including the first card, violating NFR-1 (first visible thumbnail should be eager) — fixed with a priority prop from the each-block index, confirmed via rodney that only the first card is eager."
     },
     {
       "id": "US-010",

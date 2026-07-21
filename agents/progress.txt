@@ -139,3 +139,12 @@
   - `npm run check`'s Svelte warnings (not just TypeScript errors) matter — `state_referenced_locally` and similar reactivity warnings indicate real bugs (stale derived values), not just style nits. Treat "0 errors" alone as insufficient; check the warning count too.
   - For verifying responsive breakpoints specifically (not just a single fixed-viewport screenshot), grep the **compiled CSS** for the expected `@media (width>=...)` rule and utility class rather than trying to get `rodney` to reliably scroll+screenshot at multiple emulated widths in one session — it's faster and more reliable given the tool's viewport-emulation quirks documented across US-005/US-006/US-009.
 ---
+
+## 2026-07-21 - US-009 (self-review fix, Copilot unavailable)
+- Copilot review was unavailable for this PR ("user who requested the review has reached their quota limit") — did a manual diff self-review instead.
+- Found a real spec-compliance gap: `docs/04-software-section.md`'s NFR-1 requires lazy-loading "except the first visible card's thumbnail", but `ProjectCard.svelte` applied `loading="lazy"` unconditionally to every card. Fixed by adding a `priority?: boolean` prop to `ProjectCard`, set from `SoftwareSection.svelte`'s `{#each projects as project, i (...)}` index (`priority={i === 0}`), controlling `loading={priority ? 'eager' : 'lazy'}`.
+- Verified with rodney: `[...document.querySelectorAll('#software img')].map(img => img.loading)` returns `["eager", "lazy"]` — only the first card is eager.
+- **Learnings for future iterations:**
+  - When Copilot review is unavailable (quota limit, etc.), still do a manual self-review pass against the relevant PRD's NFRs before treating a story as done — don't skip review just because the automated pass didn't run. Explicitly check the diff against every NFR bullet, not just the functional requirements, since NFRs (perf/a11y/lazy-loading) are easy to silently drop.
+  - Any "first item gets special treatment" requirement (lazy-loading, priority hints, etc.) needs the parent's `{#each ..., index}` to pass that down as a prop — a leaf component can't know its own position in a list on its own.
+---

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Project } from '$lib/data/projects';
 
-	let { project }: { project: Project } = $props();
+	let { project, priority = false }: { project: Project; priority?: boolean } = $props();
 
 	const thumbnail = $derived(project.images[0]);
 </script>
@@ -13,7 +13,7 @@
 		<img
 			src={thumbnail.src}
 			alt={thumbnail.alt}
-			loading="lazy"
+			loading={priority ? 'eager' : 'lazy'}
 			class="mb-4 aspect-video w-full object-cover"
 		/>
 	{/if}
