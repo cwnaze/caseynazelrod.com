@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { hero } from '$lib/data/hero';
 	import ScrollCue from '$lib/components/ScrollCue.svelte';
+	import HeroGrowth from '$lib/components/HeroGrowth.svelte';
 
 	const CHAR_DELAY_MS = 10;
 	const LINE_PAUSE_MS = 100;
@@ -64,57 +65,61 @@
 </script>
 
 <section id="hero" class="relative flex min-h-screen flex-col justify-center p-8">
-	<div class="mx-auto w-full max-w-6xl">
-		<div aria-hidden="true" class="mb-4 font-mono text-sm text-green-bright">
-			{#each displayedBootLines as line, i (i)}
-				<p class="glitch-hover">{line}</p>
-			{/each}
-		</div>
+	<div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-12">
+		<div class="min-w-0 flex-1">
+			<div aria-hidden="true" class="mb-4 font-mono text-sm text-green-bright">
+				{#each displayedBootLines as line, i (i)}
+					<p class="glitch-hover">{line}</p>
+				{/each}
+			</div>
 
-		<div
-			inert={!bootComplete}
-			class="transition-opacity duration-500 motion-reduce:transition-none {bootComplete
-				? 'opacity-100'
-				: 'opacity-0'}"
-		>
-			<h1 class="glitch-hover font-sans text-3xl font-bold sm:text-4xl">
-				{hero.name}
-			</h1>
-			<p class="mt-2 font-mono text-lg text-green-bright">{hero.title}</p>
-			<p class="mt-4 max-w-xl font-sans text-text-muted">{hero.tagline}</p>
+			<div
+				inert={!bootComplete}
+				class="transition-opacity duration-500 motion-reduce:transition-none {bootComplete
+					? 'opacity-100'
+					: 'opacity-0'}"
+			>
+				<h1 class="glitch-hover font-sans text-3xl font-bold sm:text-4xl">
+					{hero.name}
+				</h1>
+				<p class="mt-2 font-mono text-lg text-green-bright">{hero.title}</p>
+				<p class="mt-4 max-w-xl font-sans text-text-muted">{hero.tagline}</p>
 
-			<div class="mt-8 flex flex-wrap items-center gap-4 font-mono text-sm">
-				<button
-					type="button"
-					class="btn-shadow-hover border border-green px-4 py-2 text-green-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-					onclick={scrollToSoftware}
-				>
-					View Projects
-				</button>
-				<a
-					href={hero.resumeUrl}
-					class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-				>
-					Resume
-				</a>
-				<a
-					href={hero.githubUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-				>
-					GitHub
-				</a>
-				<a
-					href={hero.linkedinUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-				>
-					LinkedIn
-				</a>
+				<div class="mt-8 flex flex-wrap items-center gap-4 font-mono text-sm">
+					<button
+						type="button"
+						class="btn-shadow-hover border border-green px-4 py-2 text-green-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+						onclick={scrollToSoftware}
+					>
+						View Projects
+					</button>
+					<a
+						href={hero.resumeUrl}
+						class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+					>
+						Resume
+					</a>
+					<a
+						href={hero.githubUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+					>
+						GitHub
+					</a>
+					<a
+						href={hero.linkedinUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+					>
+						LinkedIn
+					</a>
+				</div>
 			</div>
 		</div>
+
+		<HeroGrowth />
 	</div>
 
 	<ScrollCue />
