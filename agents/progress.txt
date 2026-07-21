@@ -109,3 +109,22 @@
   - Any element that's only visually hidden via `opacity-0`/`visibility` classes but still rendered (not `{#if}`-gated) needs `inert` (or `tabindex="-1"` + `aria-hidden` on each focusable child) while hidden, or keyboard users can tab into invisible controls. This applies to any future fade-in reveal, not just Hero.
   - When timing a short animation window (<1s) with `rodney`, issue the state-check command immediately after the triggering action (e.g. `reload` then the very next command) rather than after other commands — CLI round-trip latency alone can exceed the window.
 ---
+
+## 2026-07-21 - US-008
+- Added `src/lib/components/ExperienceList.svelte` (`items: ExperienceEntry[]` prop, formats each entry's `startDate`/`endDate` ISO strings into a `Mon YYYY – Mon YYYY` / `Mon YYYY – Present` range via `Date.UTC` + `toLocaleDateString`) and rewrote `AboutSection.svelte` to a two-column grid (narrative + "currently building" line on the left, `ExperienceList` on the right at `md:`+, stacked single-column below).
+- `formatDate` parses the `YYYY-MM` prefix of the ISO date string directly (`isoDate.split('-')`) and constructs the date with `Date.UTC` rather than `new Date(isoDate)`, to avoid local-timezone-shift bugs where a date like `2025-06-01` could render as May in timezones behind UTC.
+- Verified with rodney: two-column layout at desktop reflows to single-column at 375px with no overlap; both Experience entries render with correct formatted date ranges including "Present" for the open-ended InvitaHealth entry; no avatar image or reserved space for one, per `docs/03-hero-about.md`'s resolved decision.
+- **Learnings for future iterations:**
+  - Constructing dates from `YYYY-MM`-style strings: always use `Date.UTC(year, month - 1)` + a `timeZone: 'UTC'` option on `toLocaleDateString`, never bare `new Date(isoDateString)`, to avoid off-by-one-month timezone bugs. This will matter again for any other date-formatted content (cert issue/expiry dates in US-012).
+---
+
+## 2026-07-21 - US-008 (self-review fix)
+- Self-review (no Copilot pass involved this time) caught two real issues before opening the PR:
+  1. `about.experience`'s array order is Finback 670 (past, `endDate` set) then InvitaHealth (current, no `endDate`) — rendering in raw array order put the *current* role second, backwards from standard resume convention (most-recent-first). Fixed by having `ExperienceList.svelte` sort a derived copy: entries with no `endDate` (ongoing) always rank first, then by `endDate` descending, then `startDate` descending — so correctness doesn't depend on `about.ts` happening to be authored in the right order.
+  2. `{#each items as entry (entry.org)}` keyed only by `org` would collide if someone ever has two separate stints at the same employer (e.g. a return internship). Changed the key to `entry.org + entry.startDate`.
+- Documented the sort behavior in `docs/03-hero-about.md` so future data-file edits don't need to worry about array order.
+- Verified with rodney: InvitaHealth (current) now renders first, Finback 670 second.
+- **Learnings for future iterations:**
+  - When a data file lists real-world chronological entries (experience, certs, accomplishments), don't assume the array is (or will stay) sorted correctly — sort at render time in the component instead, and treat "ongoing" (no end date) as always outranking any entry with an end date, not just latest-start-date-wins.
+  - `{#each}` keys built from a single field (e.g. `entry.org`) are a smell whenever that field isn't guaranteed unique across the whole array — prefer a composite key (or an explicit `id` field on the data type) when uniqueness isn't structurally guaranteed.
+---
