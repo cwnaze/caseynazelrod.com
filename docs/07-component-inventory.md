@@ -35,6 +35,7 @@ Enumerate every Svelte component in the site, its props/state, and which data it
 | `data/hero.ts` | `src/lib/data/hero.ts` | Hero copy + boot-lines + placeholder link config (03) |
 | `data/about.ts` | `src/lib/data/about.ts` | About copy + Experience entries config (03) |
 | `data/contact.ts` | `src/lib/data/contact.ts` | Contact form submit-endpoint config (placeholder now, Resend later) (00) |
+| `images.ts` | `src/lib/images.ts` | `resolveImage(src)` — glob-imports every file under `src/lib/images/` with `@sveltejs/enhanced-img`'s `?enhanced` query, keyed the same way as `ProjectImage.src`; falls back to the raw string if not found (04) |
 | `routes/layout.css` | `src/routes/layout.css` | Tailwind v4 entry + `@theme` design tokens: color, typography (01) |
 | `actions/reveal.ts` | `src/lib/actions/reveal.ts` | Svelte action wrapping the scroll-reveal `IntersectionObserver` (02) |
 | `actions/portal.ts` | `src/lib/actions/portal.ts` | Moves a node to be a direct child of `document.body` on mount (used by `Lightbox.svelte` so it isn't nested inside page content, letting the rest of the page be marked `inert` while it's open) (04) |

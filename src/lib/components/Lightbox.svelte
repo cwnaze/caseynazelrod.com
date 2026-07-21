@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ProjectImage } from '$lib/data/projects';
 	import { portal } from '$lib/actions/portal';
+	import { resolveImage } from '$lib/images';
 
 	let {
 		images,
@@ -147,8 +148,8 @@
 	{/if}
 
 	<figure class="max-h-full max-w-3xl">
-		<img
-			src={activeImage.src}
+		<enhanced:img
+			src={resolveImage(activeImage.src)}
 			alt={activeImage.alt}
 			class="max-h-[80vh] w-auto border border-green"
 		/>

@@ -1,5 +1,5 @@
 export interface ProjectImage {
-	src: string; // path under /static, e.g. "/images/projects/foo/1.png"
+	src: string; // key resolved via src/lib/images.ts's resolveImage(), e.g. "projects/foo/1.png"
 	alt: string; // required, meaningful alt text — not "screenshot"
 	caption?: string; // optional caption shown in lightbox
 }
@@ -30,7 +30,7 @@ export const projects: Project[] = [
 		techStack: ['SvelteKit', 'TypeScript'],
 		images: [
 			{
-				src: '/images/projects/civsail/1.png',
+				src: 'projects/civsail/1.png',
 				alt: 'Placeholder cover image representing the CivSail project (real screenshot pending)'
 			}
 		],
@@ -45,7 +45,7 @@ export const projects: Project[] = [
 		techStack: ['TypeScript'],
 		images: [
 			{
-				src: '/images/projects/nexus/1.png',
+				src: 'projects/nexus/1.png',
 				alt: 'Placeholder cover image representing the Nexus project (real screenshot pending)'
 			}
 		],
