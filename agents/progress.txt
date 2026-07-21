@@ -33,3 +33,13 @@
   - Don't reach for `tailwind.config.ts` anywhere in this project — it doesn't exist and isn't read; all theme customization goes in the `@theme` block in `src/routes/layout.css`.
   - When adding a new color/font token, only the `@theme` block needs updating — Tailwind regenerates both the utility classes and the `:root` custom property automatically.
 ---
+
+## 2026-07-21 - US-003
+- Added `src/lib/data/projects.ts` (ProjectImage, Project interfaces + a `projects` array with 2 seed entries: CivSail, Nexus) and `src/lib/data/certs.ts` (CertStatus, Certification, Accomplishment, SecurityTool interfaces + seed `certifications`/`accomplishments`/`securityTools` arrays), per `docs/04-software-section.md` and `docs/05-cybersecurity-section.md`.
+- `certs.ts` also exports `EXPIRY_WARNING_DAYS = 90` as the shared constant for the "expiring soon" derived-badge threshold (per the section PRD's open question default), so the cert card component (US-012) can import it instead of hardcoding 90 in two places.
+- Seeded `certifications` with 2 generic placeholder active certs (both with an `expiryDate` inside the 90-day window, to exercise "expiring soon" later) plus a real, named `cpts` entry with `status: 'in-progress'` — matching the owner's actual current cert situation (2 certs expiring soon + pursuing CPTS) even though the 2 active certs' real names aren't known yet.
+- None of these data files are imported/consumed anywhere yet — that starts at US-005+ (page shell) and US-009/US-012 (section components). Typecheck passing is standalone verification for now.
+- **Learnings for future iterations:**
+  - `EXPIRY_WARNING_DAYS` lives in `certs.ts` next to the types it governs — import it rather than redefining the threshold in `CertCard.svelte`.
+  - Seed data here is intentionally generic placeholder (not the fuller placeholder-realistic content) — that fuller pass is explicitly US-018's job, not this story's.
+---
