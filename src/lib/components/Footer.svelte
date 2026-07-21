@@ -39,5 +39,17 @@
 				LinkedIn
 			</a>
 		</div>
+
+		<p class="mt-12 font-mono text-xs text-text-muted">
+			Hero tree illustration
+			<a
+				href="https://www.magnific.com"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+			>
+				designed by Freepik - Magnific.com
+			</a>
+		</p>
 	</div>
 </footer>
