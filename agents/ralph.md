@@ -21,10 +21,16 @@ You are an autonomous coding agent working on a software project.
 10. Reflect: Update "Codebase Patterns" in CLAUDE.md.
 11. Run `showboat verify`. It must exit 0. If it fails, fix the code/demo and retry.
 12. Update CLAUDE.md files if you discover reusable patterns (see below)
-13. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
-14. Update the PRD to set `passes: true` for the completed story, and commit that PRD update on the same story branch
+13. If checks pass, commit ALL changes using **Conventional Commits** format: `<type>(<story-id>): <short summary>` — e.g. `feat(US-007): add hero boot-sequence animation`. Pick `<type>` by what the change actually is, not by default to `feat`:
+    - `feat` — new user-facing functionality (most section/component stories)
+    - `chore` — tooling, config, dependency, scaffolding work (e.g. US-001 scaffold, US-011 image pipeline, US-017 CI setup)
+    - `style` — visual/CSS-only changes with no behavior change (e.g. parts of US-002 tokens, US-009 polish)
+    - `fix` — bug fixes discovered and corrected mid-story
+    - `docs` — documentation-only changes
+    If a story mixes concerns, pick the type matching its primary intent; split into multiple commits within the branch if that's cleaner than picking one type.
+14. Update the PRD to set `passes: true` for the completed story, and commit that PRD update on the same story branch (`chore(US-XXX): mark story complete` or folded into the main story commit)
 15. Append your progress to `progress.txt`, and commit that update on the same story branch
-16. Push the branch (`git push -u origin <branch-name>`) and open a PR against `main` via `gh pr create` — title `[Story ID] Story Title`, body summarizing what was implemented and how it was verified. Do **not** merge it yourself.
+16. Push the branch (`git push -u origin <branch-name>`) and open a PR against `main` via `gh pr create` — title `<type>(<story-id>): <short summary>` matching the primary commit, body summarizing what was implemented and how it was verified. Do **not** merge it yourself.
 
 ### Tool Discovery & Usage Rules
 You have two primary specialized tools. Treat their `--help` outputs as your definitive skill specifications:
