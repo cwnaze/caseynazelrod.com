@@ -15,14 +15,16 @@
 	</div>
 
 	{#if accomplishments.length > 0}
-		<h3 class="mt-16 font-mono text-sm text-green-bright">$ cat ./accomplishments.log</h3>
+		<h3 class="glitch-hover mt-16 font-mono text-sm text-green-bright">
+			$ cat ./accomplishments.log
+		</h3>
 		<div class="mt-8">
 			<Accomplishments items={accomplishments} />
 		</div>
 	{/if}
 
 	{#if securityTools.length > 0}
-		<h3 class="mt-16 font-mono text-sm text-green-bright">$ cat ./tools.log</h3>
+		<h3 class="glitch-hover mt-16 font-mono text-sm text-green-bright">$ cat ./tools.log</h3>
 		<div class="mt-8">
 			<ToolsList tools={securityTools} />
 		</div>

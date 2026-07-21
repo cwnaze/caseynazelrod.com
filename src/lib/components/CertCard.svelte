@@ -41,7 +41,7 @@
 		: 'border-purple-deep'}"
 >
 	<div class="flex items-start justify-between gap-2">
-		<h3 class="font-sans font-bold text-base text-text">{cert.name}</h3>
+		<h3 class="glitch-hover font-sans font-bold text-base text-text">{cert.name}</h3>
 		<span class="font-bold whitespace-nowrap {badge.class}">[ {badge.label} ]</span>
 	</div>
 

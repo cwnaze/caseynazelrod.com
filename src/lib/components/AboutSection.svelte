@@ -18,7 +18,7 @@
 		</div>
 
 		<div>
-			<h3 class="mb-4 font-mono text-sm text-text-muted uppercase">Experience</h3>
+			<h3 class="glitch-hover mb-4 font-mono text-sm text-text-muted uppercase">Experience</h3>
 			<ExperienceList items={about.experience} />
 		</div>
 	</div>
