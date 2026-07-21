@@ -213,8 +213,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: Accomplishments renders both seed entries with the '>' marker; ToolsList groups the 2 seed tools into 2 distinct single-item category groups (Offensive, Defensive) with no broken layout. Temporarily added a throwaway accomplishment exercising description/date/link (target=_blank, rel=noopener noreferrer confirmed) and reverted. Self-review made the decorative '>' marker aria-hidden for consistency with the same pattern in Nav.svelte. Both sections conditionally render only if their array is non-empty."
     },
     {
       "id": "US-014",
