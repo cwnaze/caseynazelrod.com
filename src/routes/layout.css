@@ -114,3 +114,51 @@ section[id] {
 		stroke-dashoffset: 0;
 	}
 }
+
+/* Shared hard-shadow hover-lift for buttons/button-styled links — the same offset-shadow
+   language used on project/cert cards, applied consistently to every clickable CTA. */
+.btn-shadow-hover {
+	box-shadow: 4px 4px 0 0 var(--color-green);
+	transition:
+		transform 150ms ease-out,
+		box-shadow 150ms ease-out;
+}
+
+.btn-shadow-hover:hover {
+	transform: translate(-2px, -2px);
+	box-shadow: 6px 6px 0 0 var(--color-green-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btn-shadow-hover {
+		transition: none;
+	}
+	.btn-shadow-hover:hover {
+		transform: none;
+	}
+}
+
+/* Signature-interaction: a persistent blinking terminal cursor block, used next to the nav
+   logo's prompt. Purely decorative (aria-hidden). Under reduced motion it stays solid rather
+   than blinking, instead of just stopping mid-blink at a random opacity. */
+.cursor-blink {
+	animation: cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes cursor-blink {
+	0%,
+	49% {
+		opacity: 1;
+	}
+	50%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cursor-blink {
+		animation: none;
+		opacity: 1;
+	}
+}

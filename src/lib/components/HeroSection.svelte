@@ -63,54 +63,56 @@
 </script>
 
 <section id="hero" class="flex min-h-screen flex-col justify-center p-8">
-	<div aria-hidden="true" class="mb-4 font-mono text-sm text-green-bright">
-		{#each displayedBootLines as line, i (i)}
-			<p class="glitch-hover">{line}</p>
-		{/each}
-	</div>
+	<div class="mx-auto w-full max-w-6xl">
+		<div aria-hidden="true" class="mb-4 font-mono text-sm text-green-bright">
+			{#each displayedBootLines as line, i (i)}
+				<p class="glitch-hover">{line}</p>
+			{/each}
+		</div>
 
-	<div
-		inert={!bootComplete}
-		class="transition-opacity duration-500 motion-reduce:transition-none {bootComplete
-			? 'opacity-100'
-			: 'opacity-0'}"
-	>
-		<h1 class="glitch-hover font-sans text-3xl font-bold sm:text-4xl">
-			{hero.name}
-		</h1>
-		<p class="mt-2 font-mono text-lg text-green-bright">{hero.title}</p>
-		<p class="mt-4 max-w-xl font-sans text-text-muted">{hero.tagline}</p>
+		<div
+			inert={!bootComplete}
+			class="transition-opacity duration-500 motion-reduce:transition-none {bootComplete
+				? 'opacity-100'
+				: 'opacity-0'}"
+		>
+			<h1 class="glitch-hover font-sans text-3xl font-bold sm:text-4xl">
+				{hero.name}
+			</h1>
+			<p class="mt-2 font-mono text-lg text-green-bright">{hero.title}</p>
+			<p class="mt-4 max-w-xl font-sans text-text-muted">{hero.tagline}</p>
 
-		<div class="mt-8 flex flex-wrap items-center gap-4 font-mono text-sm">
-			<button
-				type="button"
-				class="border border-green px-4 py-2 text-green-bright transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0"
-				onclick={scrollToSoftware}
-			>
-				View Projects
-			</button>
-			<a
-				href={hero.resumeUrl}
-				class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-			>
-				Resume
-			</a>
-			<a
-				href={hero.githubUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-			>
-				GitHub
-			</a>
-			<a
-				href={hero.linkedinUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-			>
-				LinkedIn
-			</a>
+			<div class="mt-8 flex flex-wrap items-center gap-4 font-mono text-sm">
+				<button
+					type="button"
+					class="btn-shadow-hover border border-green px-4 py-2 text-green-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+					onclick={scrollToSoftware}
+				>
+					View Projects
+				</button>
+				<a
+					href={hero.resumeUrl}
+					class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+				>
+					Resume
+				</a>
+				<a
+					href={hero.githubUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+				>
+					GitHub
+				</a>
+				<a
+					href={hero.linkedinUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-text underline-offset-4 hover:text-green-bright hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+				>
+					LinkedIn
+				</a>
+			</div>
 		</div>
 	</div>
 </section>

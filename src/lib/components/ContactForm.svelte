@@ -77,7 +77,7 @@
 		<button
 			type="submit"
 			disabled={status === 'submitting'}
-			class="border border-green-bright px-4 py-2 text-green-bright transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0"
+			class="btn-shadow-hover border border-green-bright px-4 py-2 text-green-bright focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 		>
 			{status === 'submitting' ? 'Sending…' : 'Send'}
 		</button>
