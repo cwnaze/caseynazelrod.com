@@ -43,3 +43,12 @@
   - `EXPIRY_WARNING_DAYS` lives in `certs.ts` next to the types it governs — import it rather than redefining the threshold in `CertCard.svelte`.
   - Seed data here is intentionally generic placeholder (not the fuller placeholder-realistic content) — that fuller pass is explicitly US-018's job, not this story's.
 ---
+
+## 2026-07-21 - US-004
+- Added `src/lib/data/hero.ts` (`HeroContent` + `hero` value: boot lines, name/title/tagline, placeholder resume/GitHub/LinkedIn URLs), `src/lib/data/about.ts` (`ExperienceEntry`/`AboutContent` + `about` value: placeholder narrative, currentlyBuilding line, Finback 670 + InvitaHealth experience entries with placeholder dates), and `src/lib/data/contact.ts` (`ContactConfig` + `contact` value: a single placeholder `submitUrl`), per `docs/03-hero-about.md` and `docs/00-overview.md`'s contact resolution.
+- Every invented/unconfirmed value (narrative copy, internship dates, resume/social URLs, contact endpoint) is marked with a `PLACEHOLDER_COPY` comment so it's grep-able before launch, consistent with `docs/08-build-plan.md`'s Phase 10/10.5 plan.
+- No components consume these yet — Hero/About components start at US-007/US-008, contact form at US-014.
+- **Learnings for future iterations:**
+  - `grep -rn PLACEHOLDER_COPY src/` finds every not-yet-real piece of content across `hero.ts`/`about.ts`/`contact.ts` — useful for both US-018 (placeholder-realistic pass) and the eventual real-content swap.
+  - `contact.ts` intentionally has zero logic beyond the config value, per its acceptance criteria — submit handling logic belongs in `ContactForm.svelte` (US-014), not here.
+---
