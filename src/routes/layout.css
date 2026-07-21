@@ -158,23 +158,3 @@ section[id] {
 		animation: none;
 	}
 }
-
-/* Large botanical illustration to the right of Hero's text — see HeroGrowth.svelte. Grows in
-   via stroke-dashoffset once the page settles, independent of the .reveal/.growth-accent
-   pattern above since Hero is visible immediately (there's nothing to "reveal" on scroll). */
-.hero-growth path {
-	stroke-dasharray: 900;
-	stroke-dashoffset: 900;
-	transition: stroke-dashoffset 2000ms ease-out;
-}
-
-.hero-growth.is-grown path {
-	stroke-dashoffset: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.hero-growth path {
-		transition: none;
-		stroke-dashoffset: 0;
-	}
-}

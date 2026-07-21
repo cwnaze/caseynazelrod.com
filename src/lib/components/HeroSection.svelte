@@ -65,8 +65,8 @@
 </script>
 
 <section id="hero" class="relative flex min-h-screen flex-col justify-center p-8">
-	<div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-12">
-		<div class="min-w-0 flex-1">
+	<div class="mx-auto w-full max-w-6xl">
+		<div class="min-w-0">
 			<div aria-hidden="true" class="mb-4 font-mono text-sm text-green-bright">
 				{#each displayedBootLines as line, i (i)}
 					<p class="glitch-hover">{line}</p>
@@ -118,9 +118,8 @@
 				</div>
 			</div>
 		</div>
-
-		<HeroGrowth />
 	</div>
 
+	<HeroGrowth />
 	<ScrollCue />
 </section>
