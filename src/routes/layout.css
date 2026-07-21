@@ -159,35 +159,30 @@ section[id] {
 	}
 }
 
-/* Gentle idle sway for the static Hero bloom illustration — see HeroBloom.svelte. */
-.hero-bloom {
-	transform-origin: 50% 100%;
-	animation: hero-bloom-sway 6s ease-in-out infinite;
-}
+/* The Hero tree's trunk/branches (HeroBloom's STRUCTURE_PATHS) intentionally have no animation
+   at all — only individual leaves move, so .hero-bloom itself is just a static positioning
+   wrapper (see .hero-leaf below for the actual motion). */
 
-@keyframes hero-bloom-sway {
-	0%,
-	100% {
-		transform: rotate(-2deg);
-	}
-	50% {
-		transform: rotate(2deg);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.hero-bloom {
-		animation: none;
-	}
-}
-
-/* Proximity reaction on the Hero tree's leaves — HeroBloom.svelte tracks pointer position and
-   toggles .is-near on whichever leaf paths fall within RUSTLE_RADIUS of it (not :hover, so
-   several leaves rustle together and the effect follows the cursor continuously instead of
-   needing to land exactly on one small shape). Each leaf rotates around its own centroid
-   (transform-origin, set inline per element in HeroBloom.svelte). */
+/* Every leaf sways continuously and gently, as if in a light breeze — each with its own
+   animation-delay (set inline per element in HeroBloom.svelte) so they don't all move in
+   lockstep. Rotation pivots around the leaf's own centroid (transform-origin, also set inline).
+   .is-near swaps in a faster, larger-amplitude version — HeroBloom.svelte tracks pointer
+   position and toggles .is-near on whichever leaves fall within RUSTLE_RADIUS of it (not
+   :hover, so several leaves react together and it follows the cursor continuously instead of
+   needing to land exactly on one small shape). */
 .hero-leaf {
 	transform-box: view-box;
+	animation: hero-leaf-wind 3400ms ease-in-out infinite;
+}
+
+@keyframes hero-leaf-wind {
+	0%,
+	100% {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(3deg);
+	}
 }
 
 @keyframes hero-leaf-rustle {
@@ -196,21 +191,22 @@ section[id] {
 		transform: rotate(0deg);
 	}
 	25% {
-		transform: rotate(-9deg);
+		transform: rotate(-14deg);
 	}
 	50% {
-		transform: rotate(7deg);
+		transform: rotate(11deg);
 	}
 	75% {
-		transform: rotate(-5deg);
+		transform: rotate(-8deg);
 	}
 }
 
 .hero-leaf.is-near {
-	animation: hero-leaf-rustle 450ms ease-in-out infinite;
+	animation: hero-leaf-rustle 350ms ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.hero-leaf,
 	.hero-leaf.is-near {
 		animation: none;
 	}
