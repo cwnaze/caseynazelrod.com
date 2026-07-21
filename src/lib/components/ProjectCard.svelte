@@ -45,7 +45,7 @@
 	{/if}
 
 	<div class="flex items-baseline justify-between gap-2">
-		<h3 class="font-sans text-lg font-bold text-text">{project.title}</h3>
+		<h3 class="glitch-hover font-sans text-lg font-bold text-text">{project.title}</h3>
 		<span class="font-mono text-sm text-text-muted">{project.year}</span>
 	</div>
 

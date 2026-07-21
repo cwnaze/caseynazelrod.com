@@ -23,7 +23,7 @@
 <div class="space-y-4">
 	{#each grouped as [category, categoryTools] (category)}
 		<div>
-			<h4 class="mb-2 font-mono text-xs text-text-muted uppercase">{category}</h4>
+			<h4 class="glitch-hover mb-2 font-mono text-xs text-text-muted uppercase">{category}</h4>
 			<ul class="flex flex-wrap gap-2">
 				{#each categoryTools as tool (tool.name)}
 					<li class="border border-purple-deep px-2 py-1 font-mono text-xs text-purple">
