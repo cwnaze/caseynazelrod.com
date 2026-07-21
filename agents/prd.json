@@ -197,8 +197,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: both seed active certs correctly show 'Expiring Soon' (their 2026-09-01 expiry is within 90 days of the current date); CPTS shows 'In Progress' with a dashed border. Temporarily added throwaway certs to exercise 'Active', 'Expired', and verify-link states (target=_blank, rel=noopener noreferrer confirmed), plus a stale-active cert (status still 'active' but expiryDate already past) — self-review caught this would have silently rendered as plain 'Active' with no warning, fixed by deriving 'Expired' from expiryDate regardless of the stored status. All throwaway certs reverted before commit. Visually distinct from Software section (2-col flat-bordered list vs. 3-col hover-lift cards), same design tokens."
     },
     {
       "id": "US-013",
