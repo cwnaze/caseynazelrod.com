@@ -70,6 +70,7 @@
 	</div>
 
 	<div
+		inert={!bootComplete}
 		class="transition-opacity duration-500 motion-reduce:transition-none {bootComplete
 			? 'opacity-100'
 			: 'opacity-0'}"

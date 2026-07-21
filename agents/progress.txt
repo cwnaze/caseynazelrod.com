@@ -101,3 +101,11 @@
   - Any new internal static-asset link (resume, downloadable files, etc.) needs an actual file in `static/` before the next `npm run build` — the prerender crawler treats a missing linked asset as a hard build failure, not a warning.
   - `rodney` cannot emulate `prefers-reduced-motion` (or likely other media features) — flag this limitation explicitly in verification notes rather than silently skipping the check.
 ---
+
+## 2026-07-21 - US-007 (Copilot review fix)
+- The Hero content wrapper was `opacity-0` during the boot sequence but its CTAs (View Projects/Resume/GitHub/LinkedIn) were still real, focusable DOM elements — a keyboard user tabbing right after page load could land on invisible controls for ~800ms. Fixed by adding `inert={!bootComplete}` to that wrapper, which blocks focus and interaction entirely until the boot animation finishes.
+- Verified with rodney: `hasAttribute('inert')` is `true` immediately after reload and a `.focus()` call on the CTA button during that window does not move `document.activeElement`; after the ~800ms boot completes, `inert` is removed and `.focus()` succeeds normally. Had to `rodney reload` + check `hasAttribute('inert')` in the very next command (not a later one) to reliably catch the pre-`bootComplete` window, since the 800ms boot window is short relative to CLI round-trip latency.
+- **Learnings for future iterations:**
+  - Any element that's only visually hidden via `opacity-0`/`visibility` classes but still rendered (not `{#if}`-gated) needs `inert` (or `tabindex="-1"` + `aria-hidden` on each focusable child) while hidden, or keyboard users can tab into invisible controls. This applies to any future fade-in reveal, not just Hero.
+  - When timing a short animation window (<1s) with `rodney`, issue the state-check command immediately after the triggering action (e.g. `reload` then the very next command) rather than after other commands — CLI round-trip latency alone can exceed the window.
+---
