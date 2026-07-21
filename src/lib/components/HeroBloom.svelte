@@ -1,72 +1,91 @@
 <script lang="ts">
 	const PETAL_ANGLES = [0, 60, 120, 180, 240, 300];
-	// Small purple blossom accents scattered through the canopy — same 6-petal shape as before,
-	// just scaled down, so the tree isn't purely one color.
-	const BLOSSOMS = [
-		{ id: 'a', cx: 100, cy: 128, scale: 0.4 },
-		{ id: 'b', cx: 152, cy: 172, scale: 0.35 }
-	];
-	// Each leaf's ellipse is drawn with its near edge exactly at (attachX, attachY) and its
-	// rotation pivots around that same point (see transform-origin in the markup), so it always
-	// reads as attached to the canopy rather than floating near it.
-	const LEAVES = [
-		{ id: 'l1', attachX: 65, attachY: 165, angle: -55 },
-		{ id: 'l2', attachX: 58, attachY: 120, angle: 190 },
-		{ id: 'l3', attachX: 85, attachY: 145, angle: -95 },
-		{ id: 'l4', attachX: 75, attachY: 195, angle: 155 },
-		{ id: 'l5', attachX: 92, attachY: 205, angle: -140 },
-		{ id: 'l6', attachX: 120, attachY: 95, angle: -80 },
-		{ id: 'l7', attachX: 120, attachY: 140, angle: 100 },
-		{ id: 'l8', attachX: 105, attachY: 112, angle: -25 },
-		{ id: 'l9', attachX: 135, attachY: 112, angle: 25 },
-		{ id: 'l10', attachX: 118, attachY: 172, angle: -170 },
-		{ id: 'l11', attachX: 140, attachY: 195, angle: 15 },
-		{ id: 'l12', attachX: 172, attachY: 168, angle: -50 },
-		{ id: 'l13', attachX: 178, attachY: 122, angle: 205 },
-		{ id: 'l14', attachX: 160, attachY: 140, angle: 55 },
-		{ id: 'l15', attachX: 150, attachY: 200, angle: -15 },
-		{ id: 'l16', attachX: 183, attachY: 150, angle: 150 }
+	const GOLDEN_ANGLE = 137.508;
+	const CANOPY_CENTER = { x: 130, y: 155 };
+	const CANOPY_RADIUS = { x: 95, y: 85 };
+
+	// Deterministic phyllotaxis (sunflower-seed) scatter — not Math.random(), which would
+	// render different leaf positions on the server vs. after hydration. Distributes leaves
+	// evenly across the canopy ellipse and points each one outward from center.
+	function leafPositions(count: number) {
+		return Array.from({ length: count }, (_, i) => {
+			const angleDeg = i * GOLDEN_ANGLE;
+			const angleRad = (angleDeg * Math.PI) / 180;
+			const frac = Math.sqrt((i + 0.5) / count);
+			return {
+				id: `l${i}`,
+				attachX: Math.round(CANOPY_CENTER.x + Math.cos(angleRad) * frac * CANOPY_RADIUS.x),
+				attachY: Math.round(CANOPY_CENTER.y + Math.sin(angleRad) * frac * CANOPY_RADIUS.y),
+				angle: Math.round(angleDeg % 360)
+			};
+		});
+	}
+
+	function blossomPositions(count: number) {
+		return Array.from({ length: count }, (_, i) => {
+			const angleDeg = i * GOLDEN_ANGLE + 40;
+			const angleRad = (angleDeg * Math.PI) / 180;
+			const frac = 0.35 + (i / count) * 0.35;
+			return {
+				id: `b${i}`,
+				cx: Math.round(CANOPY_CENTER.x + Math.cos(angleRad) * frac * CANOPY_RADIUS.x),
+				cy: Math.round(CANOPY_CENTER.y + Math.sin(angleRad) * frac * CANOPY_RADIUS.y),
+				scale: 0.32 + (i % 3) * 0.05
+			};
+		});
+	}
+
+	const LEAVES = leafPositions(30);
+	const BLOSSOMS = blossomPositions(6);
+
+	// Canopy "body" — overlapping filled circles in the base green, giving the foliage a solid
+	// silhouette so gaps between individual leaves don't show bare background through it. Leaves
+	// and blossoms render on top of this for texture and hover interactivity.
+	const CANOPY_LOBES = [
+		{ cx: 130, cy: 110, r: 58 },
+		{ cx: 80, cy: 145, r: 50 },
+		{ cx: 180, cy: 145, r: 50 },
+		{ cx: 95, cy: 195, r: 44 },
+		{ cx: 165, cy: 195, r: 44 },
+		{ cx: 130, cy: 180, r: 52 }
 	];
 </script>
 
-<!-- Purely decorative, fully-drawn botanical illustration to the right of Hero's text — unlike
-	 ScrollVine this one isn't scroll-tied (that's the page-wide scrollbar-vine's job now), it's
-	 static apart from a slow, continuous idle sway (see .hero-bloom in layout.css). Hovering a
-	 leaf rustles that leaf; hovering a blossom rustles its petals — both via the
-	 .hero-leaf/.hero-petal keyframes in layout.css, not a rigid scale/spin of the whole shape. -->
+<!-- Purely decorative, fully-drawn tree to the right of Hero's text — unlike ScrollVine this
+	 isn't scroll-tied (that's the page-wide scrollbar-vine's job now), it's static apart from a
+	 slow, continuous idle sway (see .hero-bloom in layout.css). Hovering a leaf rustles that
+	 leaf; hovering a blossom rustles its petals — both via the .hero-leaf/.hero-petal keyframes
+	 in layout.css. Leaf/blossom positions are a deterministic phyllotaxis scatter (see
+	 leafPositions/blossomPositions above), not random, so server and client render identically. -->
 <div aria-hidden="true" class="hero-bloom hidden lg:block">
-	<svg width="240" height="420" viewBox="0 0 240 420" fill="none">
+	<svg width="260" height="440" viewBox="0 0 260 440" fill="none">
 		<path
-			d="M120 410 C 116 380 124 350 120 320 C 117 300 122 280 120 260 C 118 245 121 232 120 220"
-			stroke="var(--color-green)"
-			stroke-width="6"
+			d="M108 430 C 106 390 110 350 110 320 C 111 290 114 260 118 225 L 142 225 C 146 260 149 290 150 320 C 150 350 154 390 152 430 Z"
+			fill="var(--color-bark)"
+		/>
+		<path
+			d="M122 415 C 120 385 124 355 122 325 C 121 300 123 270 126 235"
+			stroke="var(--color-bark-bright)"
+			stroke-width="2"
 			stroke-linecap="round"
 		/>
 		<path
-			d="M120 220 C 100 205 75 195 65 165 C 58 145 62 130 58 120"
-			stroke="var(--color-green)"
-			stroke-width="3"
+			d="M138 410 C 140 380 137 350 139 322 C 140 298 138 268 135 238"
+			stroke="var(--color-bark-bright)"
+			stroke-width="2"
 			stroke-linecap="round"
 		/>
-		<path
-			d="M120 220 C 118 195 122 170 120 140 C 119 125 121 110 120 95"
-			stroke="var(--color-green)"
-			stroke-width="3"
-			stroke-linecap="round"
-		/>
-		<path
-			d="M120 220 C 140 205 162 195 172 168 C 178 148 174 132 178 122"
-			stroke="var(--color-green)"
-			stroke-width="3"
-			stroke-linecap="round"
-		/>
+
+		{#each CANOPY_LOBES as lobe (lobe.cx + '-' + lobe.cy)}
+			<circle cx={lobe.cx} cy={lobe.cy} r={lobe.r} fill="var(--color-green)" />
+		{/each}
 
 		{#each LEAVES as leaf (leaf.id)}
 			<g class="hero-leaf">
 				<ellipse
-					cx={leaf.attachX + 15}
+					cx={leaf.attachX + 13}
 					cy={leaf.attachY}
-					rx="15"
+					rx="13"
 					ry="6"
 					fill="var(--color-green-bright)"
 					style="--base-angle: {leaf.angle}deg; transform-origin: {leaf.attachX}px {leaf.attachY}px;
