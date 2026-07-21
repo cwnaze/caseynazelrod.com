@@ -158,3 +158,25 @@ section[id] {
 		animation: none;
 	}
 }
+
+/* Gentle idle sway for the static Hero bloom illustration — see HeroBloom.svelte. */
+.hero-bloom {
+	transform-origin: 50% 100%;
+	animation: hero-bloom-sway 6s ease-in-out infinite;
+}
+
+@keyframes hero-bloom-sway {
+	0%,
+	100% {
+		transform: rotate(-2deg);
+	}
+	50% {
+		transform: rotate(2deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hero-bloom {
+		animation: none;
+	}
+}
