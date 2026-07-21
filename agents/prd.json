@@ -95,8 +95,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: nav renders transparent at top of Hero and docks (border + surface bg) once scrolled; clicking a link smooth-scrolls, updates the hash, and highlights the active link via both color and a '>' prefix marker; logo click returns to top; mobile hamburger opens a full-screen terminal-style overlay with body scroll lock (confirmed via aria-expanded + body.style.overflow, since responsive-width click testing via CLI viewport override was flaky between separate invocations — screenshots at 375px confirmed the responsive class split visually). All nav items are keyboard-focusable."
     },
     {
       "id": "US-007",
