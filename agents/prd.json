@@ -245,8 +245,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney: scanline overlay confirmed aria-hidden=true, pointer-events:none, position:fixed, opacity:0.04, filter/backdrop-filter both none (no blur/glassmorphism); real .hover() on nav button/section headings triggers the glitch-flicker animation (confirmed via getComputedStyle().animationName and by reading the compiled stylesheet rule directly, which shows a one-shot 150ms animation with text-shadow values that are all hard 2-value offsets, zero blur radius). Both signature interactions' prefers-reduced-motion overrides confirmed present in compiled build CSS (rodney can't emulate that media feature directly, consistent with the US-007 limitation)."
     },
     {
       "id": "US-016",

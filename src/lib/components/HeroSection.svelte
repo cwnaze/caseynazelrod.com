@@ -75,7 +75,7 @@
 			? 'opacity-100'
 			: 'opacity-0'}"
 	>
-		<h1 class="font-sans text-3xl font-bold sm:text-4xl">
+		<h1 class="glitch-hover font-sans text-3xl font-bold sm:text-4xl">
 			{hero.name}
 		</h1>
 		<p class="mt-2 font-mono text-lg text-green-bright">{hero.title}</p>

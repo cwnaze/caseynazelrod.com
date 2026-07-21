@@ -72,7 +72,7 @@
 >
 	<button
 		type="button"
-		class="font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+		class="glitch-hover font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 		onclick={() => scrollToSection('hero')}
 	>
 		casey@nazelrod:~$
@@ -84,7 +84,7 @@
 				<a
 					href="#{link.id}"
 					aria-current={activeSection === link.id ? 'page' : undefined}
-					class="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
+					class="glitch-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
 					link.id
 						? 'text-green-bright'
 						: 'text-text'}"
@@ -120,7 +120,7 @@
 			<a
 				href="#{link.id}"
 				aria-current={activeSection === link.id ? 'page' : undefined}
-				class="font-mono text-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
+				class="glitch-hover font-mono text-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
 				link.id
 					? 'text-green-bright'
 					: 'text-text'}"

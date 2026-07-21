@@ -4,7 +4,7 @@
 </script>
 
 <section id="about" class="min-h-screen p-8 py-24">
-	<h2 class="font-mono text-sm text-green-bright">$ whoami</h2>
+	<h2 class="glitch-hover font-mono text-sm text-green-bright">$ whoami</h2>
 
 	<div class="mt-8 grid grid-cols-1 gap-12 md:grid-cols-2">
 		<div class="max-w-xl space-y-4 font-sans text-text">

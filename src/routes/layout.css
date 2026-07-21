@@ -33,3 +33,42 @@ body {
 section[id] {
 	scroll-margin-top: 5rem;
 }
+
+/* Signature-interaction: hard-edged RGB-channel-split flicker on hover, applied to section
+   headings and nav items (see docs/01-design-system.md's Signature Interactions). A brief
+   one-shot animation (not a sustained hover style) — text-shadow always has 0 blur (hard
+   offset, not glow). Falls back to a plain color change under reduced motion. */
+.glitch-hover:hover {
+	animation: glitch-flicker 150ms steps(1, end);
+}
+
+@keyframes glitch-flicker {
+	0% {
+		text-shadow: none;
+	}
+	20% {
+		text-shadow:
+			2px 0 var(--color-green-bright),
+			-2px 0 var(--color-purple);
+	}
+	40% {
+		text-shadow:
+			-2px 0 var(--color-green-bright),
+			2px 0 var(--color-purple);
+	}
+	60% {
+		text-shadow:
+			1px 0 var(--color-green-bright),
+			-1px 0 var(--color-purple);
+	}
+	100% {
+		text-shadow: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.glitch-hover:hover {
+		animation: none;
+		color: var(--color-green-bright);
+	}
+}
