@@ -180,3 +180,38 @@ section[id] {
 		animation: none;
 	}
 }
+
+/* Per-flower hover reaction on the Hero bloom — scales up, spins, and swaps its petal/center
+   colors. transform-box: fill-box so scale/rotate pivot around the flower's own bounding box
+   rather than the whole SVG's origin. */
+.hero-flower {
+	transform-box: fill-box;
+	transform-origin: center;
+	transition: transform 300ms ease-out;
+}
+
+.hero-flower:hover {
+	transform: scale(1.3) rotate(35deg);
+}
+
+.hero-flower ellipse,
+.hero-flower circle {
+	transition: fill 150ms ease-out;
+}
+
+.hero-flower:hover ellipse {
+	fill: var(--color-green-bright);
+}
+
+.hero-flower:hover circle {
+	fill: var(--color-purple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hero-flower {
+		transition: none;
+	}
+	.hero-flower:hover {
+		transform: none;
+	}
+}

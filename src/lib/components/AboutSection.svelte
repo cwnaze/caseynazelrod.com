@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { about } from '$lib/data/about';
 	import ExperienceList from '$lib/components/ExperienceList.svelte';
-	import GrowthAccent from '$lib/components/GrowthAccent.svelte';
 	import { reveal } from '$lib/actions/reveal';
 </script>
-
-<GrowthAccent />
 
 <section id="about" class="px-8 py-16">
 	<div class="mx-auto max-w-6xl">
