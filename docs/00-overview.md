@@ -45,6 +45,7 @@ Define the goals, audience, tech stack, and high-level architecture for caseynaz
 
 ## Contact / Form
 - Contact is handled via a form (not `mailto:` only). For v1, the form submits to a placeholder backend (a stub API endpoint that logs/no-ops, or a static-friendly placeholder service) — the owner will wire it to Resend later. The form component and its submit handler should be built so swapping the backend endpoint/service is a config change, not a component rewrite.
+- **Resolved (US-014):** `ContactForm.svelte` does a real client-side `fetch(contact.submitUrl, { mode: 'no-cors', ... })`, not a `console.log`-only stub or a SvelteKit server route (not possible under `adapter-static` anyway). `no-cors` mode resolves successfully (an opaque response) as long as the network layer can reach the host at all, even though `contact.submitUrl` isn't a real, CORS-aware backend yet — this is what lets the form show a genuine success state today with zero server. When a real Resend-backed endpoint exists, switch the fetch back to normal `cors` mode and check `response.ok` instead of assuming success on no-cors's opaque response.
 
 ## Experience (added — not in original section list)
 The owner has two internships (Finback 670, InvitaHealth) to surface alongside the two software projects (CivSail, Nexus). Rather than add a fifth top-level scroll section, these are modeled as a compact **Experience** timeline/list nested within the **About Me** section (see `03-hero-about.md`), keeping the four-section scroll structure intact.
@@ -65,4 +66,4 @@ This project is driven by the Ralph autonomous loop (`agents/ralph.md` + `agents
 5. Repo — confirmed empty; build starts from scaffold (`08-build-plan.md` Phase 1).
 
 ## Open Questions
-1. Placeholder backend for the contact form: a local no-op API route (SvelteKit form action, even though the rest of the site is static) vs. a truly static-compatible stub (e.g. a client-side fetch to a dead-simple serverless function stub, or just `console.log` + success UI until Resend is wired)? Since `adapter-static` means no server at runtime, the "backend" likely has to be an external endpoint (even a placeholder one) rather than a SvelteKit server route — confirm this constraint is understood and acceptable.
+None outstanding — the contact-form placeholder-backend question is resolved above (US-014).
