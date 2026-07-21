@@ -181,37 +181,78 @@ section[id] {
 	}
 }
 
-/* Per-flower hover reaction on the Hero bloom — scales up, spins, and swaps its petal/center
-   colors. transform-box: fill-box so scale/rotate pivot around the flower's own bounding box
-   rather than the whole SVG's origin. */
-.hero-flower {
-	transform-box: fill-box;
-	transform-origin: center;
-	transition: transform 300ms ease-out;
+/* Hover reactions on the Hero bloom — rustling, not a rigid scale/spin of the whole shape.
+   Each petal/leaf rotates from its own --base-angle (set inline per element in
+   HeroBloom.svelte), pivoting around the point where it actually meets the stem
+   (transform-origin, also set inline), so the rustle reads as that specific piece shaking in
+   place rather than the whole flower/leaf swinging around an unrelated center. */
+.hero-petal,
+.hero-leaf ellipse {
+	transform-box: view-box;
 }
 
-.hero-flower:hover {
-	transform: scale(1.3) rotate(35deg);
+@keyframes hero-petal-rustle {
+	0%,
+	100% {
+		transform: rotate(var(--base-angle));
+	}
+	20% {
+		transform: rotate(calc(var(--base-angle) - 8deg));
+	}
+	40% {
+		transform: rotate(calc(var(--base-angle) + 6deg));
+	}
+	60% {
+		transform: rotate(calc(var(--base-angle) - 5deg));
+	}
+	80% {
+		transform: rotate(calc(var(--base-angle) + 3deg));
+	}
 }
 
-.hero-flower ellipse,
-.hero-flower circle {
-	transition: fill 150ms ease-out;
+.hero-flower:hover .hero-petal {
+	animation: hero-petal-rustle 500ms ease-in-out infinite;
 }
 
-.hero-flower:hover ellipse {
-	fill: var(--color-green-bright);
+.hero-flower:hover .hero-petal:nth-child(2) {
+	animation-delay: 60ms;
+}
+.hero-flower:hover .hero-petal:nth-child(3) {
+	animation-delay: 120ms;
+}
+.hero-flower:hover .hero-petal:nth-child(4) {
+	animation-delay: 180ms;
+}
+.hero-flower:hover .hero-petal:nth-child(5) {
+	animation-delay: 240ms;
+}
+.hero-flower:hover .hero-petal:nth-child(6) {
+	animation-delay: 300ms;
 }
 
-.hero-flower:hover circle {
-	fill: var(--color-purple);
+@keyframes hero-leaf-rustle {
+	0%,
+	100% {
+		transform: rotate(var(--base-angle));
+	}
+	25% {
+		transform: rotate(calc(var(--base-angle) - 10deg));
+	}
+	50% {
+		transform: rotate(calc(var(--base-angle) + 8deg));
+	}
+	75% {
+		transform: rotate(calc(var(--base-angle) - 6deg));
+	}
+}
+
+.hero-leaf:hover ellipse {
+	animation: hero-leaf-rustle 450ms ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.hero-flower {
-		transition: none;
-	}
-	.hero-flower:hover {
-		transform: none;
+	.hero-flower:hover .hero-petal,
+	.hero-leaf:hover ellipse {
+		animation: none;
 	}
 }
