@@ -13,12 +13,12 @@ Enumerate every Svelte component in the site, its props/state, and which data it
 |---|---|---|---|---|---|
 | `+page.svelte` | `src/routes/+page.svelte` | — | — | none directly (composes sections) | 02 |
 | `Nav.svelte` | `src/lib/components/Nav.svelte` | — | `activeSection: string` | none (reads DOM section ids) | 02 |
-| `HeroSection.svelte` | `src/lib/components/HeroSection.svelte` | — | optional: typed-text progress | `data/hero.ts` (if adopted) | 03 |
+| `HeroSection.svelte` | `src/lib/components/HeroSection.svelte` | — | `displayedBootLines: string[]`, `bootComplete: boolean` | `data/hero.ts` | 03 |
 | `AboutSection.svelte` | `src/lib/components/AboutSection.svelte` | — | none | `data/about.ts` | 03 |
 | `ExperienceList.svelte` | `src/lib/components/ExperienceList.svelte` | `items: ExperienceEntry[]` | none | passed via prop (`about.ts` experience array) | 03 |
-| `SoftwareSection.svelte` | `src/lib/components/SoftwareSection.svelte` | — | `activeProjectSlug: string \| null`, `activeImageIndex: number` | `data/projects.ts` | 04 |
-| `ProjectCard.svelte` | `src/lib/components/ProjectCard.svelte` | `project: Project` | none | passed via prop | 04 |
-| `Lightbox.svelte` | `src/lib/components/Lightbox.svelte` | `images: ProjectImage[]`, `activeIndex: number`, `onClose`, `onNavigate` | transient UI state only (e.g. drag/swipe) | passed via prop | 04 |
+| `SoftwareSection.svelte` | `src/lib/components/SoftwareSection.svelte` | — | `activeProjectSlug: string \| null`, `activeImageIndex: number`, `triggerElement: HTMLElement \| null` | `data/projects.ts` | 04 |
+| `ProjectCard.svelte` | `src/lib/components/ProjectCard.svelte` | `project: Project`, `priority?: boolean`, `onOpenGallery?: (slug, trigger) => void` | none | passed via prop | 04 |
+| `Lightbox.svelte` | `src/lib/components/Lightbox.svelte` | `images: ProjectImage[]`, `activeIndex: number`, `onClose`, `onNavigate`, `triggerElement: HTMLElement \| null` | `dialogEl` (bound ref), `touchStartX: number \| null` | passed via prop | 04 |
 | `CybersecuritySection.svelte` | `src/lib/components/CybersecuritySection.svelte` | — | none (unless certs get a detail modal — TBD) | `data/certs.ts` | 05 |
 | `CertCard.svelte` | `src/lib/components/CertCard.svelte` | `cert: Certification` | none | passed via prop | 05 |
 | `Accomplishments.svelte` | `src/lib/components/Accomplishments.svelte` | `items: Accomplishment[]` | none | passed via prop | 05 |
@@ -37,7 +37,7 @@ Enumerate every Svelte component in the site, its props/state, and which data it
 | `data/contact.ts` | `src/lib/data/contact.ts` | Contact form submit-endpoint config (placeholder now, Resend later) (00) |
 | `routes/layout.css` | `src/routes/layout.css` | Tailwind v4 entry + `@theme` design tokens: color, typography (01) |
 | `actions/reveal.ts` | `src/lib/actions/reveal.ts` | Svelte action wrapping the scroll-reveal `IntersectionObserver` (02) |
-| `actions/trapFocus.ts` | `src/lib/actions/trapFocus.ts` | Focus-trap utility used by `Lightbox.svelte` (04) |
+| `actions/portal.ts` | `src/lib/actions/portal.ts` | Moves a node to be a direct child of `document.body` on mount (used by `Lightbox.svelte` so it isn't nested inside page content, letting the rest of the page be marked `inert` while it's open) (04) |
 
 ## Acceptance Criteria
 - [ ] Every component that exists in the codebase at the end of the build has a corresponding row in this table (or the table is updated in the same PR that adds/renames a component).

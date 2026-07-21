@@ -165,8 +165,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified with rodney (temporarily gave CivSail 2 images to exercise the gallery, reverted after): gallery-open button hidden for both seed projects (1 image each); with 2 images, clicking the thumbnail opens the lightbox with focus on the dialog; ArrowRight/ArrowLeft navigate and wrap around; Escape closes and restores focus to the triggering button; backdrop click (elementFromPoint at a corner) closes, clicking the image itself does not; Tab from the last focusable element wraps to the first (focus trap); touch swipe left/right (via real Touch() objects, not plain object literals) navigates next/prev; body.style.overflow is 'hidden' while open and restored to '' on close. Copilot review was unavailable (quota limit) again; manual self-review caught the dialog being nested inside <main> instead of a true top-level overlay (Tab-trap alone doesn't stop AT browse-mode navigation into background content) — fixed with a portal action (src/lib/actions/portal.ts) moving the dialog to a direct child of <body>, plus an inert-toggling effect on its siblings. That fix introduced a second bug (focus-restore racing inert-removal cleanup order across two separate effects, silently failing), caught by re-verifying with rodney and fixed by merging both concerns into one effect with a deterministic cleanup order."
     },
     {
       "id": "US-011",

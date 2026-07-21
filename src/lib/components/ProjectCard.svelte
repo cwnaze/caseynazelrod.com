@@ -1,21 +1,46 @@
 <script lang="ts">
 	import type { Project } from '$lib/data/projects';
 
-	let { project, priority = false }: { project: Project; priority?: boolean } = $props();
+	let {
+		project,
+		priority = false,
+		onOpenGallery
+	}: {
+		project: Project;
+		priority?: boolean;
+		onOpenGallery?: (slug: string, trigger: HTMLElement) => void;
+	} = $props();
 
 	const thumbnail = $derived(project.images[0]);
+	const hasGallery = $derived(project.images.length > 1);
 </script>
 
 <article
 	class="border border-green bg-surface p-4 shadow-[4px_4px_0_0_var(--color-green)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-green-bright)] motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0"
 >
 	{#if thumbnail}
-		<img
-			src={thumbnail.src}
-			alt={thumbnail.alt}
-			loading={priority ? 'eager' : 'lazy'}
-			class="mb-4 aspect-video w-full object-cover"
-		/>
+		{#if hasGallery && onOpenGallery}
+			<button
+				type="button"
+				aria-label="View {project.title} image gallery"
+				class="mb-4 block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+				onclick={(e) => onOpenGallery(project.slug, e.currentTarget)}
+			>
+				<img
+					src={thumbnail.src}
+					alt={thumbnail.alt}
+					loading={priority ? 'eager' : 'lazy'}
+					class="aspect-video w-full object-cover"
+				/>
+			</button>
+		{:else}
+			<img
+				src={thumbnail.src}
+				alt={thumbnail.alt}
+				loading={priority ? 'eager' : 'lazy'}
+				class="mb-4 aspect-video w-full object-cover"
+			/>
+		{/if}
 	{/if}
 
 	<div class="flex items-baseline justify-between gap-2">
