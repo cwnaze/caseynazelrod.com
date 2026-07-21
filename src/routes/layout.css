@@ -172,16 +172,16 @@ section[id] {
    needing to land exactly on one small shape). */
 .hero-leaf {
 	transform-box: view-box;
-	animation: hero-leaf-wind 3400ms ease-in-out infinite;
+	animation: hero-leaf-wind 2600ms ease-in-out infinite;
 }
 
 @keyframes hero-leaf-wind {
 	0%,
 	100% {
-		transform: rotate(0deg);
+		transform: rotate(-6deg);
 	}
 	50% {
-		transform: rotate(3deg);
+		transform: rotate(6deg);
 	}
 }
 
