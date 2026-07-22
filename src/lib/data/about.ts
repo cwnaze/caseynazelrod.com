@@ -13,8 +13,8 @@ export interface AboutContent {
 
 export const about: AboutContent = {
 	narrative: [
-		"I'm a Computer Engineering student at the University of Florida (Cybersecurity specialization) who likes building things and then trying to break them — usually in that order, occasionally not.",
-		'My work spans full-stack development and offensive security: shipping production features during internships, and competing internationally in cybersecurity on the side — including a 3rd-place finish out of 77 teams at the RTARF Cyber Warrior Competition in Bangkok. I like the overlap between the two disciplines more than either one alone — writing code makes me a better attacker, and thinking like an attacker makes me write safer code.'
+		"I'm a Computer Engineering student at the University of Florida, specializing in cybersecurity, with hands-on experience building full-stack web applications and agentic AI tools alongside a track record competing internationally in offensive and defensive security.",
+		"My work has combined software development internships — building and maintaining production platforms with SvelteKit, Next.js, and Supabase — with competitive cybersecurity, including a 3rd-place finish out of 77 international teams at the RTARF Cyber Warrior Competition in Bangkok and multiple national top-10 finishes in the Air Force Association's CyberPatriot program. I'm drawn to the intersection of the two: applying secure development practices to the software I build, and engineering instincts to the systems I try to break."
 	],
 	currentlyBuilding: 'a full agentic development suite (Hermes agent)',
 	experience: [
