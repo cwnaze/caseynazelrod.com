@@ -58,6 +58,16 @@
 	</ul>
 
 	<div class="mt-4 flex items-center gap-4 font-mono text-sm">
+		{#if project.links?.site}
+			<a
+				href={project.links.site}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn-shadow-hover border border-green-bright px-3 py-1 text-green-bright hover:bg-green-bright hover:text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+			>
+				Visit Site
+			</a>
+		{/if}
 		{#if project.links?.demo}
 			<a
 				href={project.links.demo}

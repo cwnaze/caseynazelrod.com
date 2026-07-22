@@ -27,27 +27,21 @@ export interface Accomplishment {
 export const certifications: Certification[] = [
 	{
 		id: 'security-plus',
-		// PLACEHOLDER_COPY: real cert name/issuer/dates pending owner confirmation
 		name: 'CompTIA Security+',
 		issuer: 'CompTIA',
-		issueDate: '2024-09-15',
-		expiryDate: '2026-09-15',
+		issueDate: '2023-09-01',
 		status: 'active',
-		// PLACEHOLDER_COPY: real credential ID/verify URL pending
-		credentialId: 'COMP001234567890',
-		verifyUrl: 'https://example.com/verify/security-plus'
+		credentialId: 'HXVE0DKTGEV114S0',
+		verifyUrl: 'https://www.certmetrics.com/comptia/public/verification.aspx?code=HXVE0DKTGEV114S0'
 	},
 	{
-		id: 'aws-saa',
-		// PLACEHOLDER_COPY: real cert name/issuer/dates pending owner confirmation
-		name: 'AWS Certified Solutions Architect – Associate',
-		issuer: 'Amazon Web Services',
-		issueDate: '2024-10-01',
-		expiryDate: '2026-10-01',
+		id: 'network-plus',
+		name: 'CompTIA Network+',
+		issuer: 'CompTIA',
+		issueDate: '2021-09-01',
 		status: 'active',
-		// PLACEHOLDER_COPY: real credential ID/verify URL pending
-		credentialId: 'AWS-PLACEHOLDER-0001',
-		verifyUrl: 'https://example.com/verify/aws-saa'
+		credentialId: 'YZ5XJ2RN43FE1KWL',
+		verifyUrl: 'https://www.certmetrics.com/comptia/public/verification.aspx?code=YZ5XJ2RN43FE1KWL'
 	},
 	{
 		id: 'cpts',
@@ -59,19 +53,41 @@ export const certifications: Certification[] = [
 
 export const accomplishments: Accomplishment[] = [
 	{
-		id: 'ctf-regional-2025',
-		// PLACEHOLDER_COPY: real placement/competition name/date pending
-		title: '2nd Place, Regional Collegiate Cyber Defense Competition',
-		description:
-			'Team placement in a regional qualifier defending a simulated corporate network against live red-team attacks.',
-		date: '2025-03-01'
+		id: 'cyberpatriot-xvi',
+		title: 'CyberPatriot XVI — 5th Place Nationally',
+		description: 'Advanced to National Finals with the Air Force Association CyberPatriot program.',
+		date: '2025-01-01'
 	},
 	{
-		id: 'ctf-national-cyber-league',
-		// PLACEHOLDER_COPY: real placement/competition name/date pending
-		title: 'Top 10%, National Cyber League (Individual Game)',
+		id: 'cyber-chats-podcast',
+		title: '#Cyber Chats Podcast Guest',
+		description: 'Discussed cybersecurity opportunities for youth interested in the field.',
+		date: '2025-01-01'
+	},
+	{
+		id: 'rtarf-cyber-warrior',
+		title: 'RTARF Cyber Warrior Competition — 3rd of 77 International Teams',
 		description:
-			'Individual placement across categories including cryptography, log analysis, and network traffic analysis.',
-		date: '2024-11-01'
+			'Represented U.S. Cyber Command in Bangkok, Thailand, favoring problems in programming, cryptography, and web exploitation.',
+		date: '2024-01-01'
+	},
+	{
+		id: 'cyberpatriot-xv',
+		title: 'CyberPatriot XV — 8th Place Nationally, 1st Place Maryland',
+		description: 'Advanced to National Finals with the Air Force Association CyberPatriot program.',
+		date: '2024-01-01'
+	},
+	{
+		id: 'cyber-battle-nordic-baltics',
+		title: 'Cyber Battle of the Nordic-Baltics — 6th Internationally',
+		description:
+			'Competed in Tartu, Estonia, favoring problems in web exploitation and penetration testing.',
+		date: '2023-01-01'
+	},
+	{
+		id: 'cyberpatriot-xiv',
+		title: 'CyberPatriot XIV — 21st Place Nationally, 1st Place Maryland',
+		description: 'Air Force Association CyberPatriot program.',
+		date: '2023-01-01'
 	}
 ];
