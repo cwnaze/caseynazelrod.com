@@ -35,10 +35,6 @@ export const projects: Project[] = [
 			{
 				src: 'projects/civsail/1.png',
 				alt: 'CivSail landing page showing the "One hub for your life as a mariner" hero section'
-			},
-			{
-				src: 'projects/civsail/2.png',
-				alt: 'Second placeholder image representing the CivSail project (real screenshot pending)'
 			}
 		],
 		links: {
@@ -59,10 +55,6 @@ export const projects: Project[] = [
 			{
 				src: 'projects/nexus/1.png',
 				alt: 'Placeholder cover image representing the Nexus project (real screenshot pending)'
-			},
-			{
-				src: 'projects/nexus/2.png',
-				alt: 'Second placeholder image representing the Nexus project (real screenshot pending)'
 			}
 		],
 		links: {

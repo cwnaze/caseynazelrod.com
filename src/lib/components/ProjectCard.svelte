@@ -13,19 +13,19 @@
 	} = $props();
 
 	const thumbnail = $derived(project.images[0]);
-	const hasGallery = $derived(project.images.length > 1);
+	const canExpand = $derived(project.images.length > 0 && !!onOpenGallery);
 </script>
 
 <article
 	class="border border-green bg-surface p-4 shadow-[4px_4px_0_0_var(--color-green)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-green-bright)] motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0"
 >
 	{#if thumbnail}
-		{#if hasGallery && onOpenGallery}
+		{#if canExpand}
 			<button
 				type="button"
-				aria-label="View {project.title} image gallery"
-				class="mb-4 block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-				onclick={(e) => onOpenGallery(project.slug, e.currentTarget)}
+				aria-label="View full-size image of {project.title}"
+				class="group relative mb-4 block w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+				onclick={(e) => onOpenGallery?.(project.slug, e.currentTarget)}
 			>
 				<enhanced:img
 					src={resolveImage(thumbnail.src)}
@@ -33,6 +33,24 @@
 					loading={priority ? 'eager' : 'lazy'}
 					class="aspect-video w-full object-cover"
 				/>
+				<span
+					class="absolute inset-0 flex items-center justify-center bg-base/0 opacity-0 transition-all duration-150 group-hover:bg-base/50 group-hover:opacity-100 motion-reduce:transition-none"
+				>
+					<svg
+						aria-hidden="true"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						class="h-8 w-8 text-green-bright"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M9 3H4.5A1.5 1.5 0 0 0 3 4.5V9m6-6h10.5A1.5 1.5 0 0 1 21 4.5V9m-6-6v6m6 9v4.5a1.5 1.5 0 0 1-1.5 1.5H15m6-6v6m-6-6H3m0 0v4.5A1.5 1.5 0 0 0 4.5 21H9m0 0v-6"
+						/>
+					</svg>
+				</span>
 			</button>
 		{:else}
 			<enhanced:img
