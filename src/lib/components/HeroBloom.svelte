@@ -1350,8 +1350,8 @@
 					const releaseRate = 1 - Math.exp(-dt / 900);
 					leaf.boost += (targetBoost - leaf.boost) * releaseRate;
 				}
-				const amplitude = 13 * gust * (1 + leaf.boost * 1.1);
-				const freqScale = 1 + leaf.boost * 1.8;
+				const amplitude = 7 * gust * (1 + leaf.boost * 0.7);
+				const freqScale = 1 + leaf.boost * 0.7;
 				const angle = amplitude * Math.sin((t / 2200) * freqScale * Math.PI * 2 + leaf.phase);
 				leaf.node.style.transform = `rotate(${angle.toFixed(2)}deg)`;
 			}
