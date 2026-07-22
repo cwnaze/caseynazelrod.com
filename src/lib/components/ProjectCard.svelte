@@ -41,13 +41,13 @@
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
-						stroke-width="2"
+						stroke-width="1.5"
 						class="h-8 w-8 text-green-bright"
 					>
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
-							d="M9 3H4.5A1.5 1.5 0 0 0 3 4.5V9m6-6h10.5A1.5 1.5 0 0 1 21 4.5V9m-6-6v6m6 9v4.5a1.5 1.5 0 0 1-1.5 1.5H15m6-6v6m-6-6H3m0 0v4.5A1.5 1.5 0 0 0 4.5 21H9m0 0v-6"
+							d="M3.75 8.25v-3a1.5 1.5 0 0 1 1.5-1.5h3m10.5 0h3a1.5 1.5 0 0 1 1.5 1.5v3m0 7.5v3a1.5 1.5 0 0 1-1.5 1.5h-3m-10.5 0h-3a1.5 1.5 0 0 1-1.5-1.5v-3"
 						/>
 					</svg>
 				</span>
