@@ -114,3 +114,62 @@ section[id] {
 		stroke-dashoffset: 0;
 	}
 }
+
+/* Shared hard-shadow hover-lift for buttons/button-styled links — the same offset-shadow
+   language used on project/cert cards, applied consistently to every clickable CTA. */
+.btn-shadow-hover {
+	box-shadow: 4px 4px 0 0 var(--color-green);
+	transition:
+		transform 150ms ease-out,
+		box-shadow 150ms ease-out;
+}
+
+.btn-shadow-hover:hover {
+	transform: translate(-2px, -2px);
+	box-shadow: 6px 6px 0 0 var(--color-green-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btn-shadow-hover {
+		transition: none;
+	}
+	.btn-shadow-hover:hover {
+		transform: none;
+	}
+}
+
+/* Continuous "scroll down" cue in the Hero section — see ScrollCue.svelte. */
+.scroll-cue {
+	animation: scroll-cue-bounce 2s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-bounce {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(10px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.scroll-cue {
+		animation: none;
+	}
+}
+
+/* The Hero tree's trunk/branches (HeroBloom's STRUCTURE_PATHS) intentionally have no animation
+   at all — only individual leaves move, so .hero-bloom itself is just a static positioning
+   wrapper (see .hero-leaf below for the actual motion). */
+
+/* Every leaf's rotation is driven directly by a requestAnimationFrame loop in HeroBloom.svelte
+   (gusty idle sway, boosted continuously by pointer proximity — see the $effect there), not a
+   CSS animation — so there's no discrete hover-triggered animation to start/restart, and the
+   response to pointer movement is exactly one frame behind, not "waiting" on anything. Rotation
+   pivots around the leaf's own centroid (transform-origin, set inline per element). Under
+   prefers-reduced-motion the loop never starts, so leaves stay at their untransformed rest
+   position. */
+.hero-leaf {
+	transform-box: view-box;
+}

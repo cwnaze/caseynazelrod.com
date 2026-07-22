@@ -63,7 +63,7 @@
 				href={project.links.demo}
 				target="_blank"
 				rel="noopener noreferrer"
-				class="border border-green-bright px-3 py-1 text-green-bright hover:bg-green-bright hover:text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+				class="btn-shadow-hover border border-green-bright px-3 py-1 text-green-bright hover:bg-green-bright hover:text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
 			>
 				Live Demo
 			</a>

@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Nav from '$lib/components/Nav.svelte';
 	import ScanlineOverlay from '$lib/components/ScanlineOverlay.svelte';
+	import ScrollVine from '$lib/components/ScrollVine.svelte';
 
 	let { children } = $props();
 </script>
@@ -10,4 +11,5 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <ScanlineOverlay />
 <Nav />
+<ScrollVine />
 {@render children()}

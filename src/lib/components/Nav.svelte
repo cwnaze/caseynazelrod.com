@@ -66,49 +66,51 @@
 </script>
 
 <nav
-	class="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-4 transition-colors duration-200 motion-reduce:transition-none {dockedNav
+	class="fixed inset-x-0 top-0 z-50 py-4 transition-colors duration-200 motion-reduce:transition-none {dockedNav
 		? 'border-b border-green bg-surface'
 		: 'border-b border-transparent bg-transparent'}"
 >
-	<button
-		type="button"
-		class="glitch-hover font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
-		onclick={() => scrollToSection('hero')}
-	>
-		casey@nazelrod:~$
-	</button>
+	<div class="mx-auto flex max-w-6xl items-center justify-between px-6">
+		<button
+			type="button"
+			class="glitch-hover font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright"
+			onclick={() => scrollToSection('hero')}
+		>
+			casey@nazelrod:~$
+		</button>
 
-	<ul class="hidden items-center gap-6 font-mono text-sm md:flex">
-		{#each LINKS as link (link.id)}
-			<li>
-				<a
-					href="#{link.id}"
-					aria-current={activeSection === link.id ? 'page' : undefined}
-					class="glitch-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
-					link.id
-						? 'text-green-bright'
-						: 'text-text'}"
-					onclick={(e) => {
-						e.preventDefault();
-						scrollToSection(link.id);
-					}}
-				>
-					{#if activeSection === link.id}<span aria-hidden="true" class="mr-1">&gt;</span
-						>{/if}{link.label}
-				</a>
-			</li>
-		{/each}
-	</ul>
+		<ul class="hidden items-center gap-6 font-mono text-sm md:flex">
+			{#each LINKS as link (link.id)}
+				<li>
+					<a
+						href="#{link.id}"
+						aria-current={activeSection === link.id ? 'page' : undefined}
+						class="glitch-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright {activeSection ===
+						link.id
+							? 'text-green-bright'
+							: 'text-text'}"
+						onclick={(e) => {
+							e.preventDefault();
+							scrollToSection(link.id);
+						}}
+					>
+						{#if activeSection === link.id}<span aria-hidden="true" class="mr-1">&gt;</span
+							>{/if}{link.label}
+					</a>
+				</li>
+			{/each}
+		</ul>
 
-	<button
-		type="button"
-		class="font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright md:hidden"
-		aria-expanded={mobileMenuOpen}
-		aria-controls="mobile-nav-overlay"
-		onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
-	>
-		{mobileMenuOpen ? 'close' : 'menu'}
-	</button>
+		<button
+			type="button"
+			class="font-mono text-sm text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-bright md:hidden"
+			aria-expanded={mobileMenuOpen}
+			aria-controls="mobile-nav-overlay"
+			onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+		>
+			{mobileMenuOpen ? 'close' : 'menu'}
+		</button>
+	</div>
 </nav>
 
 {#if mobileMenuOpen}

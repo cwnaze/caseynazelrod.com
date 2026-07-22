@@ -24,15 +24,6 @@ export interface Accomplishment {
 	link?: string; // e.g. writeup, article, or event page
 }
 
-// Real category list is still TBD per the owner's actual tools (see docs/05-cybersecurity-section.md
-// open questions); extend this union as needed rather than falling back to a plain string.
-export type SecurityToolCategory = 'Offensive' | 'Defensive' | 'Forensics' | 'GRC';
-
-export interface SecurityTool {
-	name: string; // e.g. "Burp Suite"
-	category: SecurityToolCategory;
-}
-
 export const certifications: Certification[] = [
 	{
 		id: 'security-plus',
@@ -83,15 +74,4 @@ export const accomplishments: Accomplishment[] = [
 			'Individual placement across categories including cryptography, log analysis, and network traffic analysis.',
 		date: '2024-11-01'
 	}
-];
-
-export const securityTools: SecurityTool[] = [
-	// PLACEHOLDER_COPY: real tool list pending owner confirmation (see docs/05-cybersecurity-section.md open questions)
-	{ name: 'Burp Suite', category: 'Offensive' },
-	{ name: 'Nmap', category: 'Offensive' },
-	{ name: 'Metasploit', category: 'Offensive' },
-	{ name: 'Wireshark', category: 'Defensive' },
-	{ name: 'Splunk', category: 'Defensive' },
-	{ name: 'Autopsy', category: 'Forensics' },
-	{ name: 'Volatility', category: 'Forensics' }
 ];
