@@ -1256,7 +1256,13 @@
 	let mouseX = -9999;
 	let mouseY = -9999;
 
-	type LeafHandle = { node: SVGPathElement; cx: number; cy: number; phase: number };
+	type LeafHandle = {
+		node: SVGPathElement;
+		cx: number;
+		cy: number;
+		phase: number;
+		boost: number;
+	};
 	let leafHandles: LeafHandle[] = [];
 
 	// Svelte action: registers each leaf's DOM node (plus a phase offset derived from its
@@ -1268,7 +1274,8 @@
 			node,
 			cx: leaf.cx,
 			cy: leaf.cy,
-			phase: (leaf.delay / 3000) * Math.PI * 2
+			phase: (leaf.delay / 3000) * Math.PI * 2,
+			boost: 0
 		};
 		leafHandles.push(handle);
 		return {
@@ -1314,14 +1321,18 @@
 	// Every leaf's rotation is recomputed from scratch each frame — base sway (its own phase,
 	// so leaves aren't in lockstep) times a shared "gust" envelope (two slow, unrelated-period
 	// sine waves summed, so the wind ebbs and flows rather than looping identically), plus a
-	// continuous 0-1 proximity boost. Nothing here is a discrete animation that starts/stops —
-	// the boost is just a bigger multiplier applied on the very next frame after the pointer
-	// moves, so there's no "waiting" for a rustle animation to kick in.
+	// continuous proximity boost. The boost itself has an attack/release envelope (each leaf's
+	// `boost` field): it jumps to its target instantly when the pointer gets closer (fast
+	// attack, no waiting for a rustle animation to kick in), but eases back down gradually over
+	// ~1s when the pointer moves away, instead of snapping straight back to the ambient pace.
 	$effect(() => {
 		if (reduced || !isDesktop) return;
 
 		let rafId: number;
+		let lastT: number | null = null;
 		function frame(t: number) {
+			const dt = lastT === null ? 16 : t - lastT;
+			lastT = t;
 			const gust = Math.max(
 				0.3,
 				1 +
@@ -1332,9 +1343,15 @@
 				const dx = leaf.cx - mouseX;
 				const dy = leaf.cy - mouseY;
 				const dist = Math.sqrt(dx * dx + dy * dy);
-				const boost = Math.max(0, 1 - dist / RUSTLE_RADIUS);
-				const amplitude = 13 * gust * (1 + boost * 1.1);
-				const freqScale = 1 + boost * 1.8;
+				const targetBoost = Math.max(0, 1 - dist / RUSTLE_RADIUS);
+				if (targetBoost > leaf.boost) {
+					leaf.boost = targetBoost;
+				} else {
+					const releaseRate = 1 - Math.exp(-dt / 900);
+					leaf.boost += (targetBoost - leaf.boost) * releaseRate;
+				}
+				const amplitude = 13 * gust * (1 + leaf.boost * 1.1);
+				const freqScale = 1 + leaf.boost * 1.8;
 				const angle = amplitude * Math.sin((t / 2200) * freqScale * Math.PI * 2 + leaf.phase);
 				leaf.node.style.transform = `rotate(${angle.toFixed(2)}deg)`;
 			}
@@ -1364,10 +1381,6 @@
 		onpointermove={reduced ? undefined : handlePointerMove}
 		onpointerleave={reduced ? undefined : handlePointerLeave}
 	>
-		{#each STRUCTURE_PATHS as d (d)}
-			<path {d} fill="var(--color-green)" fill-rule="nonzero" />
-		{/each}
-
 		{#each FOLIAGE as leaf (leaf.id)}
 			<path
 				use:registerLeaf={leaf}
@@ -1377,6 +1390,15 @@
 				fill-rule="nonzero"
 				style="transform-origin: {leaf.cx}px {leaf.cy}px;"
 			/>
+		{/each}
+
+		<!-- Structure renders on top of foliage, not below — a rotating leaf near a thin branch
+			 tip would otherwise visually smear across the branch and read as the branch itself
+			 moving. Since structure never animates, keeping it as the topmost layer means a
+			 branch's rendered pixels are always exactly the same regardless of what any nearby
+			 leaf is doing underneath. -->
+		{#each STRUCTURE_PATHS as d (d)}
+			<path {d} fill="var(--color-green)" fill-rule="nonzero" />
 		{/each}
 	</svg>
 </div>
