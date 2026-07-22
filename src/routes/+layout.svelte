@@ -4,6 +4,9 @@
 	import Nav from '$lib/components/Nav.svelte';
 	import ScanlineOverlay from '$lib/components/ScanlineOverlay.svelte';
 	import ScrollVine from '$lib/components/ScrollVine.svelte';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
+
+	injectAnalytics();
 
 	let { children } = $props();
 </script>
