@@ -11,8 +11,7 @@ export const hero: HeroContent = {
 	bootLines: ['> initializing casey.dev...', '> loading profile...'],
 	name: 'Casey Nazelrod',
 	title: 'Software Developer & Cybersecurity Practitioner',
-	// PLACEHOLDER_COPY: swap for real links before launch (see docs/03-hero-about.md open questions)
 	resumeUrl: '/resume.pdf',
-	githubUrl: 'https://github.com/placeholder',
-	linkedinUrl: 'https://linkedin.com/in/placeholder'
+	githubUrl: 'https://github.com/cwnaze',
+	linkedinUrl: 'https://linkedin.com/in/casey-nazelrod'
 };

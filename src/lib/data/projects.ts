@@ -12,11 +12,12 @@ export interface Project {
 	techStack: string[]; // e.g. ["SvelteKit", "TypeScript", "PostgreSQL"]
 	images: ProjectImage[]; // first image is used as the card thumbnail
 	links?: {
-		demo?: string;
+		demo?: string; // a demo/staging deployment — rendered as "Live Demo"
+		site?: string; // the real, live production site — rendered as "Visit Site"
 		repo?: string;
 		writeup?: string;
 	};
-	year: number; // required, shown on every card (e.g. 2025)
+	year: number | string; // required, shown on every card (e.g. 2025 or "2025 – Present" for ongoing work)
 }
 // No `featured` tier — unnecessary at 2-project launch scale (CivSail, Nexus);
 // both render equal-weight in one grid.
@@ -25,57 +26,42 @@ export const projects: Project[] = [
 	{
 		slug: 'civsail',
 		title: 'CivSail',
-		// PLACEHOLDER_COPY: real summary pending (see docs/04-software-section.md open questions)
 		summary:
-			'A civic-engagement platform helping residents track and weigh in on local government initiatives.',
-		// PLACEHOLDER_COPY: real description pending
+			'A hub for merchant mariners — ships, ports, tools, and career resources in one place.',
 		description:
-			'CivSail lets residents follow local council agendas, proposed ordinances, and public meetings in one place, ' +
-			'with plain-language summaries and a way to submit public comment directly to the relevant committee.',
-		techStack: ['SvelteKit', 'TypeScript', 'PostgreSQL'],
+			'CivSail brings together the information merchant mariners otherwise have to dig for out of Facebook groups and ' +
+			'ten-year-old PDFs: ship class guides, interactive port pages, MSC pay calculators and tools, and a professional network.',
+		techStack: ['Next.js', 'TypeScript', 'Supabase'],
 		images: [
 			{
 				src: 'projects/civsail/1.png',
-				alt: 'Placeholder cover image representing the CivSail project (real screenshot pending)'
-			},
-			{
-				src: 'projects/civsail/2.png',
-				alt: 'Second placeholder image representing the CivSail project (real screenshot pending)'
+				alt: 'CivSail landing page showing the "One hub for your life as a mariner" hero section'
 			}
 		],
 		links: {
-			// PLACEHOLDER_COPY: real links pending
-			demo: 'https://civsail.example.com',
-			repo: 'https://github.com/placeholder/civsail'
+			site: 'https://civsail.com',
+			repo: 'https://github.com/CIVSail/civsail-website'
 		},
-		year: 2025
+		year: '2025 – Present'
 	},
 	{
 		slug: 'nexus',
 		title: 'Nexus',
-		// PLACEHOLDER_COPY: real summary pending (see docs/04-software-section.md open questions)
 		summary:
-			'A unified developer dashboard that aggregates data from multiple internal APIs into one live view.',
-		// PLACEHOLDER_COPY: real description pending
+			'A web server that exposes local virtual machines over VNC — connect to a VM straight from the browser.',
 		description:
-			'Nexus pulls status, logs, and metrics from several internal services into a single dashboard, ' +
-			'so an on-call engineer can see the health of an entire system without switching between tools.',
-		techStack: ['TypeScript', 'Node.js', 'Redis'],
+			'Nexus streams a VNC connection to a local virtual machine into the browser via noVNC, so you can access ' +
+			'and control a VM through a website instead of a dedicated VNC client.',
+		techStack: ['SvelteKit', 'TypeScript', 'noVNC'],
 		images: [
 			{
 				src: 'projects/nexus/1.png',
 				alt: 'Placeholder cover image representing the Nexus project (real screenshot pending)'
-			},
-			{
-				src: 'projects/nexus/2.png',
-				alt: 'Second placeholder image representing the Nexus project (real screenshot pending)'
 			}
 		],
 		links: {
-			// PLACEHOLDER_COPY: real links pending
-			demo: 'https://nexus.example.com',
-			repo: 'https://github.com/placeholder/nexus'
+			repo: 'https://github.com/cwnaze/Nexus-Web-Server'
 		},
-		year: 2025
+		year: '2024 – 2025'
 	}
 ];
