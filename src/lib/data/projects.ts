@@ -26,9 +26,10 @@ export const projects: Project[] = [
 	{
 		slug: 'civsail',
 		title: 'CivSail',
-		summary: 'A hub for merchant mariners — ships, ports, tools, and career resources in one place.',
+		summary:
+			'A hub for merchant mariners — ships, ports, tools, and career resources in one place.',
 		description:
-			"CivSail brings together the information merchant mariners otherwise have to dig for out of Facebook groups and " +
+			'CivSail brings together the information merchant mariners otherwise have to dig for out of Facebook groups and ' +
 			'ten-year-old PDFs: ship class guides, interactive port pages, MSC pay calculators and tools, and a professional network.',
 		techStack: ['Next.js', 'TypeScript', 'Supabase'],
 		images: [
@@ -46,7 +47,8 @@ export const projects: Project[] = [
 	{
 		slug: 'nexus',
 		title: 'Nexus',
-		summary: 'A web server that exposes local virtual machines over VNC — connect to a VM straight from the browser.',
+		summary:
+			'A web server that exposes local virtual machines over VNC — connect to a VM straight from the browser.',
 		description:
 			'Nexus streams a VNC connection to a local virtual machine into the browser via noVNC, so you can access ' +
 			'and control a VM through a website instead of a dedicated VNC client.',
